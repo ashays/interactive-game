@@ -7,7 +7,12 @@
     <title>Interactive Educational Game</title>
   </head>
   <body>
-    <h1>Hi Student</h1>
+    <h1>Please Login</h1>
+    <form id="sign-in">
+      <input type="text" id="name" placeholder="Name"></input>
+      <input type="text" id="fact" placeholder="Fun Fact"></input>
+      <input type="submit" value="Go">
+    </form>
     
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script>
@@ -22,6 +27,6 @@
       firebase.initializeApp(config);
     </script>
     <script src="jquery-3.1.1.min.js"></script>
-    <script src="script.js"></script>
+    <script src="student.js"></script>
   </body>
 </html>
