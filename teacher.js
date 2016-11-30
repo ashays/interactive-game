@@ -68,7 +68,6 @@ function matchingGame(gameid) {
 			} else {
 				var dataStruct = words;
 			}
-			debugger;
 			for (var name in studentMatches) {
 				console.log(name);
 				if (dataStruct[studentMatches[name][1]]) {
