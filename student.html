@@ -41,12 +41,14 @@
           <strong>MatchMe: </strong>
           <span>Everyone playing has a word or corresponding definition on their screen. As soon as the game begins, everyone should move around and find who his or her match is (either who has the corresponding definition to his or her term or vice versa). Once you find your match, enter his or her name on your screen and we'll let you know if you're correct. Be fast! Matches will appear on the front screen as they are made. Good luck!</span>
         </div>
+      </div>
+      <div class="panel" id="correct-panel">
+        <img src="https://media.giphy.com/media/3oGRFp0AqM0BY4axjO/giphy.gif" alt="Damn Right GIF">
+        <h2>Correct!</h2>
+        <p>Good job- you matched correctly. Just relax, now, while everyone else finds their matches.</p>
+      </div>
     </div>
-    <div class="panel" id="correct-panel">
-      <img src="https://media.giphy.com/media/3oGRFp0AqM0BY4axjO/giphy.gif" alt="Damn Right GIF">
-      <h2>Correct!</h2>
-      <p>Good job- you matched correctly. Just relax, now, while everyone else finds their matches.</p>
-    </div>    
+    <div onclick="signOut()" style="color: #fff; font-size: 10px; text-transform: uppercase; text-align: center; cursor: pointer;">Logout</div>
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script>
       // Initialize Firebase

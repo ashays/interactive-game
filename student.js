@@ -82,7 +82,8 @@ function signOut() {
     firebase.auth().signOut().then(function() {
         console.log('Signed Out');
         firebase.database().ref('students/' + uid).set({});
+        location.reload();
     }, function(error) {
         console.error('Sign Out Error', error);
-    });    
+    });
 }
