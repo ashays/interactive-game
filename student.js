@@ -15,7 +15,7 @@ $(document).ready(function() {
 
     $("#submit-answer").submit(function(event) {
         event.preventDefault();
-        if ($(event.target).attr('data-answer') == $($(event.target).children('input')[0]).val()) {
+        if ($(event.target).attr('data-answer').toLowerCase() == $($(event.target).children('input')[0]).val().toLowerCase()) {
             $('#word-panel').hide();
             $('#status-panel h2').text("correct");
             $('#status-panel').show();
