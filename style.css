@@ -6,21 +6,107 @@
 }
 
 body {
-	font-family: sans-serif;
+	font-family: 'Montserrat', sans-serif;
 }
 
 body.student {
-	background: #f44336;	
+	background: #00bcd4;
+}
+
+header {
+    background: #eee;
+    padding: 13px 15px;
+    margin-bottom: 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-weight: normal;
 }
 
 .mobile-container {
     width: 90%;
     margin: 20px auto;
     max-width: 500px;
-    padding: 15px;
     background: #fff;
+    padding-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 5px 5px #00838F;
+    overflow: hidden;
 }
 
 .panel {
     display: none;
+    padding: 0 15px;
 }
+
+header span#username {
+    float: right;
+    color: #555;
+}
+
+header span#username:before {
+	content: 'Hi ';
+}
+
+.word {
+    font-size: 50px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+form input[type=text] {
+    display: block;
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+    padding: 10px;
+    background: #f5f5f5;
+    border: 0;
+    outline: none;
+}
+
+form input[type=submit] {
+	background: #f44336;
+	border: 0;
+	color: #fff;
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 50px;
+	font-size: 15px;
+	padding: 0 10px;
+}
+
+form {
+    position: relative;
+}
+
+.info {
+    background: #eee;
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.info strong {
+    text-transform: uppercase;
+}
+
+div#word-panel h2 .small {
+    display: block;
+    font-size: 13px;
+}
+
+body.student.correct {
+    background: #7cb342;
+}
+
+.correct .mobile-container {
+    box-shadow: 5px 5px #AED581;
+}
+
+#correct-panel img {
+    width: 100%;
+}
+

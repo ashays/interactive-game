@@ -3,32 +3,50 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <title>Interactive Educational Game</title>
   </head>
   <body class="student">
     <div class="mobile-container">
-      <h1>ConnectEd</h1>
+      <header>
+        <span id="username"></span>
+        <h1>Connect<strong>Ed</strong></h1>
+      </header>
       <div class="panel" id="login-panel">
-        <h2>Please Login</h2>
+        <h2>Invitation to Play</h2>
+        <p>You've been invited to join the game <strong>Data Structures Overview [MatchMe] </strong> in AP Computer Science. To get started, please enter your name below.</p>
         <form id="sign-in">
           <input type="text" id="name" placeholder="Name" required="true"></input>
-          <input type="text" id="fact" placeholder="Fun Fact"></input>
+          <input type="text" id="fact" placeholder="Fun Fact" style="display: none;"></input>
           <input type="submit" value="Go">
         </form>
       </div>
       <div class="panel" id="word-panel">
+        <h2><span class="small">AP Computer Science ></span>Data Structures Overview</h2>
         <div class="word">Sample Word</div>
-        <form id="submit-answer" data-answer="bob">
-          <input type="text" id="name" placeholder="Matched Person's Name"></input>
+        <form id="submit-answer" data-answer="">
+          <input type="text" id="name" placeholder="Match Name"></input>
           <input type="submit" value="Submit">
         </form>
+        <div class="info">
+          <strong>MatchMe: </strong>
+          <span>Everyone playing has a word or corresponding definition on their screen. Find your match and enter in his or her name above!</span>
+        </div>
       </div>
-      <div class="panel" id="status-panel">
-        <h2>Please wait for the game to begin!</h2>
-      </div>
+      <div class="panel" id="waiting-panel">
+        <h2>Please wait</h2>
+        <p>Hi! You've successfully joined the game <strong>Data Structures Overview [MatchMe] </strong> in AP Computer Science. Now, just hold on tight- we're just waiting for everyone else to join the game before we get started. While you wait, learn more about the game, the rules, and how to play below.</p>
+        <div class="info">
+          <strong>MatchMe: </strong>
+          <span>Everyone playing has a word or corresponding definition on their screen. As soon as the game begins, everyone should move around and find who his or her match is (either who has the corresponding definition to his or her term or vice versa). Once you find your match, enter his or her name on your screen and we'll let you know if you're correct. Be fast! Matches will appear on the front screen as they are made. Good luck!</span>
+        </div>
     </div>
-    
+    <div class="panel" id="correct-panel">
+      <img src="https://media.giphy.com/media/3oGRFp0AqM0BY4axjO/giphy.gif" alt="Damn Right GIF">
+      <h2>Correct!</h2>
+      <p>Good job- you matched correctly. Just relax, now, while everyone else finds their matches.</p>
+    </div>    
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script>
       // Initialize Firebase

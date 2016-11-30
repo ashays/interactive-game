@@ -19,7 +19,7 @@ $(document).ready(function() {
         if (user) {
         // User is signed in.
         $('#login-panel').hide();
-        $('#status-panel').show();
+        $('#waiting-panel').show();
         var isAnonymous = user.isAnonymous;
         uid = user.uid;
         if (justSignedIn) {
@@ -33,8 +33,9 @@ $(document).ready(function() {
 
         var myRef = firebase.database().ref('students/' + user.uid);
         myRef.on('value', function(snapshot) {
+            $('#username').text(snapshot.val().name);
             if (snapshot.val().word && snapshot.val().matchedperson) {
-                $('#status-panel').hide();
+                $('#waiting-panel').hide();
                 $('#word-panel').show();
                 $('#submit-answer').attr('data-answer', snapshot.val().matchedperson);
                 $('.word').text(snapshot.val().word);
@@ -46,9 +47,8 @@ $(document).ready(function() {
             event.preventDefault();
             if ($(event.target).attr('data-answer').toLowerCase() == $($(event.target).children('input')[0]).val().toLowerCase()) {
                 $('#word-panel').hide();
-                $('#status-panel h2').text("correct");
-                $('#status-panel').show();
-                $('body').attr('style', 'background-color: green');
+                $('#correct-panel').show();
+                $('body').addClass('correct');
                 firebase.database().ref('students/' + uid).update({
                     iscorrect: true
                 });
