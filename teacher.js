@@ -1,10 +1,10 @@
 $(document).ready(function() {
-  $("#startGameButton").hide();
   var database = firebase.database();
   var gamesRef = firebase.database().ref('games/').once('value').then(function(snapshot) {
     snapshot.forEach(function(childSnapShot) {
     	$('#games').append('<li onclick="gameSelected(event)" data-id = "' + childSnapShot.key + '" data-gametype= "' + childSnapShot.val().type + '">' + childSnapShot.val().name + '</li>');
-    });  
+    });
+    $('#games-panel').show();
   });
 });
 
@@ -13,12 +13,17 @@ function gameSelected(event) {
 	var gameType = $(event.target).data().gametype;
 	console.log(gameId);
 	console.log(gameType);
-	$("#startGameButton").show();
-	$("#startGameButton").click(function(event) {
-		$("#games").hide();
-		$("#startGameButton").hide();
-		startGame(gameId, gameType);
-	});
+  $('#games-panel').hide();
+  $('#thegame-panel').show();
+  $('#almost-start-the-game').click(function() {
+    $('#thegame-panel').hide();
+    $('#thegames-panel').show();
+    $("#startGameButton").click(function(event) {
+     $("#thegames-panel").hide();
+     $("#matchme-panel").show();
+     startGame(gameId, gameType);
+    });
+  });
 }
 
 function startGame(gameid, gameType) {
@@ -81,16 +86,21 @@ function matchingGame(gameid) {
 			          thatPersonRef.on('value', function(snapshot) {
 			            // console.log(snapshot.val());
 			            if (snapshot.val().iscorrect == true) {
+                    $('#no-matches').hide();
 			              studentMatches[name].push(true);
 			              if (studentMatches[childSnapShot.val().name].length < 3) {
-			                var theMatch = "";
+			                var theWord = "";
+                      var theDef = ""
 			                if (studentMatches[childSnapShot.val().name][0] == true) {
-			                  theMatch = studentMatches[childSnapShot.val().name][1] + " ---> " + studentMatches[name][1];
+                        theWord = studentMatches[childSnapShot.val().name][1];
+                        theDef = studentMatches[name][1];
 			                } else {
-			                  theMatch = studentMatches[name][1] + " ---> " + studentMatches[childSnapShot.val().name][1];
+                        theDef = studentMatches[childSnapShot.val().name][1];
+                        theWord = studentMatches[name][1];
 			                }
 			                console.log(childSnapShot.val().name + " just correctly matched with " + name);
-			                $('#matches').append('<li>' + theMatch + '</li>')                
+                      var listItemToAppend = '<li><span class="people">' + childSnapShot.val().name + ' and ' + name + '</span><span class="question">' + theWord + '</span><span class="answer">' + theDef + '</span></li>';
+			                $('#matches').append(listItemToAppend);
 			              }
 			            }
 			          });
