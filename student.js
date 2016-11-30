@@ -1,3 +1,5 @@
+var uid;
+
 $(document).ready(function() {
     var database = firebase.database();
     var justSignedIn = false;
@@ -19,7 +21,7 @@ $(document).ready(function() {
         $('#login-panel').hide();
         $('#status-panel').show();
         var isAnonymous = user.isAnonymous;
-        var uid = user.uid;
+        uid = user.uid;
         if (justSignedIn) {
             firebase.database().ref('students/' + uid).set({
                 name: $('#name').val(),
@@ -79,6 +81,7 @@ $(document).ready(function() {
 function signOut() {
     firebase.auth().signOut().then(function() {
         console.log('Signed Out');
+        firebase.database().ref('students/' + uid).set({});
     }, function(error) {
         console.error('Sign Out Error', error);
     });    
