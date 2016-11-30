@@ -77,23 +77,23 @@ function matchingGame(gameid) {
 				//debugger;
 				if (dataStruct[studentMatches[name][1]] && dataStruct[studentMatches[name][1]] == studentMatches[childSnapShot.val().name][1]) {
 					firebase.database().ref('students/' + childSnapShot.key).update({matchedperson : name});
-			  //         var thatPersonRef = firebase.database().ref('students/' + childSnapShot.key);
-			  //         thatPersonRef.on('value', function(snapshot) {
-			  //           // console.log(snapshot.val());
-			  //           if (snapshot.val().iscorrect == true) {
-			  //             studentMatches[name].push(true);
-			  //             if (studentMatches[childSnapShot.val().name].length < 3) {
-			  //               var theMatch = "";
-			  //               if (studentMatches[childSnapShot.val().name][0] == true) {
-			  //                 theMatch = studentMatches[childSnapShot.val().name][1] + " ---> " + studentMatches[name][1];
-			  //               } else {
-			  //                 theMatch = studentMatches[name][1] + " ---> " + studentMatches[childSnapShot.val().name][1];
-			  //               }
-			  //               console.log(childSnapShot.val().name + " just correctly matched with " + name);
-			  //               $('#matches').append('<li>' + theMatch + '</li>')                
-			  //             }
-			  //           }
-			  //         });
+			          var thatPersonRef = firebase.database().ref('students/' + childSnapShot.key);
+			          thatPersonRef.on('value', function(snapshot) {
+			            // console.log(snapshot.val());
+			            if (snapshot.val().iscorrect == true) {
+			              studentMatches[name].push(true);
+			              if (studentMatches[childSnapShot.val().name].length < 3) {
+			                var theMatch = "";
+			                if (studentMatches[childSnapShot.val().name][0] == true) {
+			                  theMatch = studentMatches[childSnapShot.val().name][1] + " ---> " + studentMatches[name][1];
+			                } else {
+			                  theMatch = studentMatches[name][1] + " ---> " + studentMatches[childSnapShot.val().name][1];
+			                }
+			                console.log(childSnapShot.val().name + " just correctly matched with " + name);
+			                $('#matches').append('<li>' + theMatch + '</li>')                
+			              }
+			            }
+			          });
 					break;
 				}
 			}
