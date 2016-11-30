@@ -33,9 +33,11 @@ function startGame(gameid, gameType) {
 
 function matchingGame(gameid) {
 	var words = {};
+	var reversedWords = {};
 	firebase.database().ref('games/' + gameid + '/questions/').once('value').then(function(snapshot) {
 		snapshot.forEach(function(childSnapShot) {
 			words[childSnapShot.key] = childSnapShot.val();
+			reversedWords[childSnapShot.val()] = childSnapShot.key;
 		});
 	});
 	var playersRef = firebase.database().ref('students/').once('value').then(function(snapshot) {
@@ -51,6 +53,7 @@ function matchingGame(gameid) {
 				firebase.database().ref('students/' + childSnapShot.key).update({word : input,});
 				key = false;
 			} else {
+				
 				var input = words[keys[counter]];
 				studentMatches[childSnapShot.val().name] = [true, keys[counter]];
 				firebase.database().ref('students/' + childSnapShot.key).update({word : input,});
@@ -61,10 +64,11 @@ function matchingGame(gameid) {
 
 		snapshot.forEach(function(childSnapShot) {
 			if (studentMatches[childSnapShot.val().name][0]) {
-				var dataStruct = keys;
+				var dataStruct = reversedWords;
 			} else {
 				var dataStruct = words;
 			}
+			debugger;
 			for (var name in studentMatches) {
 				console.log(name);
 				if (dataStruct[studentMatches[name][1]]) {
