@@ -16,6 +16,10 @@ $(document).ready(function() {
     $("#submit-answer").submit(function(event) {
         event.preventDefault();
         if ($(event.target).attr('data-answer') == $($(event.target).children('input')[0]).val()) {
+            $('#word-panel').hide();
+            $('#status-panel h2').text("correct");
+            $('#status-panel').show();
+            $('body').attr('style', 'background-color: green');
             console.log("correct");
         } else {
             console.log("incorrect");
@@ -40,9 +44,10 @@ $(document).ready(function() {
 
         var myRef = firebase.database().ref('students/' + user.uid);
         myRef.on('value', function(snapshot) {
-            if (snapshot.val().word) {
+            if (snapshot.val().word && snapshot.val().matchedperson) {
                 $('#status-panel').hide();
                 $('#word-panel').show();
+                $('#submit-answer').attr('data-answer', snapshot.val().matchedperson);
                 $('.word').text(snapshot.val().word);
             }
             console.log(snapshot.val());
