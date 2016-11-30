@@ -13,19 +13,6 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
-    $("#submit-answer").submit(function(event) {
-        event.preventDefault();
-        if ($(event.target).attr('data-answer').toLowerCase() == $($(event.target).children('input')[0]).val().toLowerCase()) {
-            $('#word-panel').hide();
-            $('#status-panel h2').text("correct");
-            $('#status-panel').show();
-            $('body').attr('style', 'background-color: green');
-            console.log("correct");
-        } else {
-            console.log("incorrect");
-        }
-    });
-
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
         // User is signed in.
@@ -37,7 +24,7 @@ $(document).ready(function() {
             firebase.database().ref('students/' + uid).set({
                 name: $('#name').val(),
                 fact: $('#fact').val()
-            });            
+            });
         }
         console.log(isAnonymous);
         console.log(uid);
@@ -51,6 +38,23 @@ $(document).ready(function() {
                 $('.word').text(snapshot.val().word);
             }
             console.log(snapshot.val());
+        });
+
+        $("#submit-answer").submit(function(event) {
+            event.preventDefault();
+            if ($(event.target).attr('data-answer').toLowerCase() == $($(event.target).children('input')[0]).val().toLowerCase()) {
+                $('#word-panel').hide();
+                $('#status-panel h2').text("correct");
+                $('#status-panel').show();
+                $('body').attr('style', 'background-color: green');
+                firebase.database().ref('students/' + uid).update({
+                    iscorrect: true
+                });
+                console.log("correct");
+            } else {
+                alert('Incorrect! Please try again');
+                console.log("incorrect");
+            }
         });
 
         // ...

@@ -72,11 +72,22 @@ function matchingGame(gameid) {
 				console.log(name);
 				if (dataStruct[studentMatches[name][1]]) {
 					firebase.database().ref('students/' + childSnapShot.key).update({matchedperson : name});
+          var thatPersonRef = firebase.database().ref('students/' + childSnapShot.key);
+          thatPersonRef.on('value', function(snapshot) {
+            console.log(snapshot.val());
+            if (snapshot.val().iscorrect == true) {
+              console.log(childSnapShot.val().name + " just correctly matched with " + name);
+            }
+          });
+
 					break;
 				}
 			}
 		});
 	});
+
+
+
 }
 
 //[Ashay : blue, Dhruv : Colour of Sky]
