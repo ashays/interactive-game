@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var database = firebase.database();
-
+    var justSignedIn = false;
     $("#sign-in").submit(function(event) {
         firebase.auth().signInAnonymously().catch(function(error) {
           // Handle Errors here.
@@ -9,10 +9,18 @@ $(document).ready(function() {
           // ...
         });
         console.log(event.target);
+        justSignedIn = true;
         event.preventDefault();
     });
 
-
+    $("#submit-answer").submit(function(event) {
+        event.preventDefault();
+        if ($(event.target).attr('data-answer') == $($(event.target).children('input')[0]).val()) {
+            console.log("correct");
+        } else {
+            console.log("incorrect");
+        }
+    });
 
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -21,10 +29,12 @@ $(document).ready(function() {
         $('#status-panel').show();
         var isAnonymous = user.isAnonymous;
         var uid = user.uid;
-        firebase.database().ref('students/' + uid).set({
-            name: $('#name').val(),
-            fact: $('#fact').val()
-        });
+        if (justSignedIn) {
+            firebase.database().ref('students/' + uid).set({
+                name: $('#name').val(),
+                fact: $('#fact').val()
+            });            
+        }
         console.log(isAnonymous);
         console.log(uid);
 
