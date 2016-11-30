@@ -42,18 +42,39 @@ function matchingGame(gameid) {
 		counter = 0;
 		key = true;
 		keys = Object.keys(words);
+		var studentMatches = {};
 		//debugger;
 		snapshot.forEach(function(childSnapShot) {
 			if (key) {
 				var input = keys[counter];
+				studentMatches[childSnapShot.val().name] = [false, words[input]];
 				firebase.database().ref('students/' + childSnapShot.key).update({word : input,});
 				key = false;
 			} else {
 				var input = words[keys[counter]];
+				studentMatches[childSnapShot.val().name] = [true, keys[counter]];
 				firebase.database().ref('students/' + childSnapShot.key).update({word : input,});
 				key = true;
 				counter++;
 			}
 		});
+
+		snapshot.forEach(function(childSnapShot) {
+			if (studentMatches[childSnapShot.val().name][0]) {
+				var dataStruct = keys;
+			} else {
+				var dataStruct = words;
+			}
+			for (var name in studentMatches) {
+				console.log(name);
+				if (dataStruct[studentMatches[name][1]]) {
+					firebase.database().ref('students/' + childSnapShot.key).update({matchedperson : name});
+					break;
+				}
+			}
+		});
 	});
 }
+
+//[Ashay : blue, Dhruv : Colour of Sky]
+//[Ashay : (false, COS), Dhruv: (true, Blue)]
