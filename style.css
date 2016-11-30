@@ -6,5 +6,21 @@
 }
 
 body {
-	
+	font-family: sans-serif;
+}
+
+body.student {
+	background: #f44336;	
+}
+
+.mobile-container {
+    width: 90%;
+    margin: 20px auto;
+    max-width: 500px;
+    padding: 15px;
+    background: #fff;
+}
+
+.panel {
+    display: none;
 }
