@@ -1,4 +1,14 @@
 $(document).ready(function() {
+	firebase.auth().onAuthStateChanged(function(user) {
+	  if (user) {
+	    // User is signed in.
+	    console.log(user);
+	    $('#user-name').text(user.displayName);
+	  } else {
+	  	console.log("error: no user signed in");
+	    // No user is signed in.
+	  }
+	});
   var database = firebase.database();
   var gamesRef = firebase.database().ref('games/').once('value').then(function(snapshot) {
     snapshot.forEach(function(childSnapShot) {
