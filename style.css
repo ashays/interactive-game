@@ -8,8 +8,98 @@
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
-    background: #00bcd4;
 }
+
+header {
+    width: 100%;
+    background: #F44336;
+    color: #fff;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+header h1 {
+    margin: 0;
+    font-weight: normal;
+    display: inline-block;
+    width: 50%;
+}
+
+header .menu {
+    float: right;
+    text-align: right;
+    line-height: 40px;
+}
+
+header .menu .menu-btn {
+    padding: 0 10px;
+    display: inline-block;
+    cursor: pointer;
+    height: 40px;
+    vertical-align: middle;
+    transition: all .3s;
+}
+
+header .menu .menu-btn a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+}
+
+header .menu .menu-btn i {
+    margin: 0 5px;
+    line-height: 40px;
+}
+
+header .menu .menu-btn:hover {
+    background: rgba(0, 0, 0, .1);
+}
+
+.panel {
+    /*display: none;*/
+    padding: 0 15px;
+}
+
+.panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.panel ul li {
+    padding: 10px;
+    background: #eee;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all .3s;
+}
+
+.panel ul li:nth-child(odd) {
+    background: #ddd;
+}
+
+.panel ul li:hover {
+    background: #e7e7e7;
+    border-left: 3px solid #f44336;
+    color: #f44336;
+}
+
+.panel .button-right {
+    background: #f44336;
+    color: #fff;
+    display: inline-block;
+    padding: 10px;
+    float: right;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+
 
 .fold {
     background: #00bcd4;
