@@ -20,11 +20,27 @@
     </header>
     <div class="container">
       <div class="panel">
+        <div class="button-right" id="changePasswordButton">Change Password</div>
+        <div class="button-right" id="cancelProfileUpdateButton" style="display: none">Cancel</div>
+        <div class="button-right" id="updateProfileInformationButton" style="display: none">Update</div>
         <h2>Profile</h2>
+        <ul>
+            <li id="changeUserName">
+              Name: <span id="users-name"></span><input type="text" style="display: none" id="updatedName">
+            </li>
+            <li id="changeEmailId">
+              Email: <span id="users-email"></span><input type="text" style="display: none" id="updatedEmail">
+            </li>
+            <li class="reauthenticate" style="display: none">Please Provide your original email and password</li>
+            <li class="reauthenticate" style="display: none">Email: <input type="email" id="reauthenticateEmail" required></li>
+            <li class="reauthenticate" style="display: none">Password: <input type="password" id="reauthenticatePassword" required></li>
+            <li style="display: none" id="change-password-field">New Password: <input type="password" id="newPassword" required></li>
+        </ul>
       </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script src="jquery-3.1.1.min.js"></script>
     <script src="header.js"></script>
+    <script src="profile.js"></script>
   </body>
 </html>
