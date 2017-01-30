@@ -6,18 +6,26 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <title>Interactive Educational Game</title>
   </head>
-  <body>
-    <div class="fold">
-      <h1>Connect<strong>Ed</strong></h1>
-      <form id="create-account">
-        <fieldset>
-          <legend>Instructors, create an account</legend>
-          <label>Email <input type="email" name="email" required></label>
-          <label>Password <input type="password" name="password" required></label>
-          <!-- Password again -->
-          <label>Display Name <input type="name" name="name" required></label>
-          <input type="submit" value="Sign up">
-        </fieldset>
+  <body class="special">
+    <h1>Connect<strong>Ed</strong></h1>
+    <div class="container">
+      <form id="login">
+        <h2>Login</h2>
+        <span class="subt" id="login-error"></span>
+        <span class="subt">Don't have an account? <span id="btn-create-account">Sign up</span></span>
+        <label><span>Email</span><input type="email" name="email" required></label>
+        <label><span>Password</span><input type="password" name="password" required></label>
+        <input type="submit" value="Login">
+      </form>
+      <form id="create-account" style="display: none;">
+        <h2>Create an Account</h2>
+        <span class="subt" id="create-account-error"></span>
+        <span class="subt">Already have an account? <span id="btn-login">Login</span></span>
+        <label><span>Name</span><input type="name" name="name" required></label>
+        <label><span>Email</span><input type="email" name="email" required></label>
+        <label><span>Password</span><input type="password" name="password" required></label>
+        <!-- <label><span>Confirm Password</span><input type="password" name="password-confirm" required></label> -->
+        <input type="submit" value="Sign up">
       </form>
     </div>
     
@@ -34,6 +42,6 @@
       firebase.initializeApp(config);
     </script>
     <script src="jquery-3.1.1.min.js"></script>
-    <script src="script.js"></script>
+    <script src="login.js"></script>
   </body>
 </html>

@@ -24,6 +24,18 @@ header {
     padding: 10px;
 }
 
+.special .container {
+    width: 90%;
+    margin: 20px auto;
+    max-width: 500px;
+    background: #fff;
+    color: #333;
+    padding-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 5px 5px #00838F;
+    overflow: hidden;
+}
+
 header h1 {
     margin: 0;
     font-weight: normal;
@@ -99,29 +111,27 @@ header .menu .menu-btn:hover {
     cursor: pointer;
 }
 
-
-
-.fold {
+body.special {
     background: #00bcd4;
     padding: 20px;
     color: #fff;
     text-align: center;
 }
 
-.fold h1 {
+.special h1 {
     margin: 25px 0;
     font-weight: normal;
     font-size: 55px;
 }
 
-.fold .subtitle {
+.special .subtitle {
     font-size: 25px;
     max-width: 500px;
     display: block;
     margin: 0 auto;
 }
 
-.fold .button {
+.special .button {
     display: block;
     width: 275px;
     margin: 5px auto;
@@ -131,7 +141,7 @@ header .menu .menu-btn:hover {
     cursor: pointer;
 }
 
-.fold .button.feature-btn {
+.special .button.feature-btn {
     background: #fff;
     padding: 15px;
     color: #00bcd4;
@@ -140,16 +150,42 @@ header .menu .menu-btn:hover {
     width: 300px;
 }
 
-.fold form {
-    max-width: 500px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    color: #333;
-    text-align: left;
+.special .button.feature-btn a {
+    display: block;
+    color: inherit;
+    text-decoration: inherit;
 }
 
-.fold form label {
+.special form label {
     display: block;
     margin: 5px 0;
+}
+
+.special form input {
+    padding: 5px;
+    font-size: 15px;
+}
+
+.special form label span {
+    display: inline-block;
+    width: 100px;
+    font-size: 15px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.special form .subt {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.special form .subt span {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#login-error, #create-account-error {
+    color: red;
 }
