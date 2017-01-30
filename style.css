@@ -10,141 +10,84 @@ body {
     margin: 0;
 }
 
-body.student {
-    background: #00bcd4;
-    padding-bottom: 20px;
-}
-
-.student header {
-    background: #eee;
-    padding: 13px 15px;
-    margin-bottom: 15px;
-}
-
-header h1 {
-    margin: 0;
-    font-weight: normal;
-}
-
-.mobile-container {
-    width: 90%;
-    margin: 20px auto;
-    max-width: 500px;
-    background: #fff;
-    padding-bottom: 15px;
-    border-radius: 5px;
-    box-shadow: 5px 5px #00838F;
-    overflow: hidden;
-}
-
-.panel {
-    display: none;
-    padding: 0 15px;
-}
-
-header span#username {
-    float: right;
-    color: #555;
-}
-
-header span#username:before {
-    content: 'Hi ';
-}
-
-.word {
-    font-size: 50px;
-    text-align: center;
-    margin: 20px 0;
-}
-
-form input[type=text] {
-    display: block;
-    width: 100%;
-    height: 50px;
-    font-size: 20px;
-    padding: 10px;
-    background: #f5f5f5;
-    border: 0;
-    outline: none;
-}
-
-form input[type=submit] {
-    background: #f44336;
-    border: 0;
-    color: #fff;
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 50px;
-    font-size: 15px;
-    padding: 0 10px;
-}
-
-form {
-    position: relative;
-}
-
-.info {
-    background: #eee;
-    padding: 10px;
-    font-size: 14px;
-    color: #333;
-}
-
-.info strong {
-    text-transform: uppercase;
-}
-
-h2 .small {
-    display: block;
-    font-size: 13px;
-}
-
-body.student.correct {
-    background: #7cb342;
-}
-
-.correct .mobile-container {
-    box-shadow: 5px 5px #AED581;
-}
-
-img {
-    width: 100%;
-}
-
-.teacher header {
+header {
     width: 100%;
     background: #F44336;
     color: #fff;
     padding: 20px;
 }
 
-.teacher header h1 {
+.container {
+    max-width: 900px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.special .container {
+    width: 90%;
+    margin: 20px auto;
+    max-width: 500px;
+    background: #fff;
+    color: #333;
+    padding-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 5px 5px #00838F;
+    overflow: hidden;
+}
+
+header h1 {
+    margin: 0;
+    font-weight: normal;
     display: inline-block;
     width: 50%;
 }
 
-.teacher header span {
+header h1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+header .menu {
     float: right;
     text-align: right;
     line-height: 40px;
 }
 
-.container {
-    max-width: 900px;
-    min-height: 500px;
-    width: 90%;
-    margin: 0 auto;
-    background: #fff;
-    padding: 10px;
+header .menu .menu-btn {
+    padding: 0 10px;
+    display: inline-block;
+    cursor: pointer;
+    height: 40px;
+    vertical-align: middle;
+    transition: all .3s;
 }
 
-ul {
+header .menu .menu-btn a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+}
+
+header .menu .menu-btn i {
+    margin: 0 5px;
+    line-height: 40px;
+}
+
+header .menu .menu-btn:hover {
+    background: rgba(0, 0, 0, .1);
+}
+
+.panel {
+    display: none;
+}
+
+.panel ul {
     list-style: none;
     padding: 0;
 }
 
-ul li {
+.panel ul li {
     padding: 10px;
     background: #eee;
     cursor: pointer;
@@ -152,21 +95,17 @@ ul li {
     transition: all .3s;
 }
 
-ul li:nth-child(odd) {
+.panel ul li:nth-child(odd) {
     background: #ddd;
 }
 
-ul li:hover {
+.panel ul li:hover {
     background: #e7e7e7;
     border-left: 3px solid #f44336;
     color: #f44336;
 }
 
-body.teacher {
-    background: #fefefe;
-}
-
-.button {
+.panel .button-right {
     background: #f44336;
     color: #fff;
     display: inline-block;
@@ -176,89 +115,102 @@ body.teacher {
     cursor: pointer;
 }
 
-#game-types li {
-    display: inline-block;
-    width: 30%;
-    margin: 1%;
-    vertical-align: top;
-    min-height: 200px;
-    font-size: 15px;
+.empty-message {
+    font-size: 25px;
+    text-align: center;
+    color: #333;
+    line-height: 35px;
+    padding: 10px;
+    width: 450px;
+    margin: 0 auto;
 }
 
-#game-types li h3 {
+.empty-message a {
+    color: #f44336;
+}
+
+.empty-message i {
+    display: block;
+    font-size: 75px;
+    margin: 15px 0;
+    color: #f44336;
+}
+
+body.special {
+    background: #00bcd4;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+}
+
+.special h1 {
+    margin: 25px 0;
+    font-weight: normal;
+    font-size: 55px;
+}
+
+.special .subtitle {
+    font-size: 25px;
+    max-width: 500px;
+    display: block;
+    margin: 0 auto;
+}
+
+.special .button {
+    display: block;
+    width: 275px;
+    margin: 5px auto;
+    padding: 10px;
+    border: 3px solid;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.special .button.feature-btn {
+    background: #fff;
+    padding: 15px;
+    color: #00bcd4;
+    margin: 10px auto;
+    font-size: 20px;
+    width: 300px;
+}
+
+.special .button.feature-btn a {
+    display: block;
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.special form label {
+    display: block;
     margin: 5px 0;
 }
 
-h2 .highlight {
-    display: inline-block;
-    background: #f44336;
+.special form input {
     padding: 5px;
-    color: #fff;
-    margin-left: 5px;
-    font-size: 12px;
-    font-weight: normal;
-    text-transform: uppercase;
+    font-size: 15px;
 }
 
-span#no-matches {
-    color: #999;
-    display: block;
-    font-size: 30px;
-    text-align: center;
-    width: 400px;
-    max-width: 100%;
-    margin: 15px auto;
-}
-
-
-#questions li {
-    padding: 0;
-    position: relative;
-}
-
-#questions li .question {
-    padding: 10px;
+.special form label span {
     display: inline-block;
-    width: 15%;
+    width: 100px;
+    font-size: 15px;
     text-align: right;
-    vertical-align: top;
-    min-height: 60px;
-    line-height: 40px;
+    padding-right: 10px;
 }
 
-#questions li .answer {
-    padding: 10px;
+.special form .subt {
     display: inline-block;
-    width: 80%;
-    border-left: 1px solid #ccc;
-    min-height: 60px;
+    margin-bottom: 10px;
+    font-size: 15px;
 }
 
-#matches li {
-    padding: 0;
-    position: relative;
+.special form .subt span {
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
-#matches li .question {
-    padding: 10px;
-    display: inline-block;
-    width: 15%;
-    text-align: right;
-    vertical-align: top;
-    min-height: 60px;
-    line-height: 40px;
+#login-error, #create-account-error {
+    color: red;
 }
-
-#matches li .answer {
-    padding: 10px;
-    display: inline-block;
-    width: 80%;
-    border-left: 1px solid #ccc;
-    min-height: 60px;
-}
-
-#matches li .people {
-    display: block;
-    margin: 10px 0;
-}
-
