@@ -43,6 +43,11 @@ header h1 {
     width: 50%;
 }
 
+header h1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
 header .menu {
     float: right;
     text-align: right;
