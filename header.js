@@ -8,17 +8,25 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var userData;
+
 $(document).ready(function() {
 	firebase.auth().onAuthStateChanged(function(user) {
 	  if (user) {
 	    // User is signed in.
 	    $('#user-name').text(user.displayName);
+	    var userRef = firebase.database().ref('users/' + user.uid);
+	    userRef.on('value', function(snapshot) {
+	      userData = snapshot.val();
+	      onUserDataFunc();
+	    });
 	  } else {
 	  	console.log("error: no user signed in");
 	  	window.location.replace("index.html");
 	    // No user is signed in.
 	  }
 	});
+
 	$('#btn-logout').click(function() {
 		firebase.auth().signOut().then(function() {
 			// Sign-out successful.
@@ -28,3 +36,7 @@ $(document).ready(function() {
 		});
 	})
 });
+
+function onUserDataFunc() {
+	console.log(userData);
+}

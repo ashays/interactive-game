@@ -24,7 +24,12 @@ $(document).ready(function() {
 			user.updateProfile({
 				displayName: name
 			}).then(function() {
-				window.location.href = "dash.html";
+				firebase.database().ref('users/' + user.uid).set({
+				  name: name,
+				  email: email
+				}).then(function() {
+					window.location.href = "dash.html";					
+				});
 			}, function(error) {
 				// TODO error handling
 				// An error happened.
