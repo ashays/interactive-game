@@ -18,6 +18,7 @@ $(document).ready(function() {
 	    var userRef = firebase.database().ref('users/' + user.uid);
 	    userRef.on('value', function(snapshot) {
 	      userData = snapshot.val();
+	      userData['uid'] = user.uid;
 	      onUserDataFunc();
 	    });
 	  } else {
@@ -32,11 +33,15 @@ $(document).ready(function() {
 			// Sign-out successful.
 			window.location.href = "index.html";
 		}, function(error) {
-			// An error happened.
+			displayError(error.message);
 		});
 	})
 });
 
 function onUserDataFunc() {
 	console.log(userData);
+}
+
+function displayError(message) {
+	alert(message);
 }

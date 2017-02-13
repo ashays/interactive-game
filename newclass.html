@@ -19,26 +19,16 @@
       </div>
     </header>
     <div class="container">
-      <div class="panel" id="my-classes-panel">
-        <a href="newclass.html"><div class="button-right">New Class</div></a>
-        <h2>Classes I Own</h2>
-        <ul></ul>
-      </div>
-      <div class="panel" id="classes-panel">
-        <h2>Classes I'm In</h2>
-        <ul>
-          <li>CS 1331</li>
-          <li>AP Computer Science</li>
-          <li>PSYC 2015</li>
-        </ul>
-      </div>
-      <div class="panel" id="no-classes-panel">
-        <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Welcome to ConnectEd! <strong>Students: </strong>Sit tight and follow your teacher's instructions to join his or her class. <strong>Instructors: </strong>Get started by <a href="newclass.html">creating a class</a> and inviting your students to join.</div>
-      </div>
+      <form id="create-class">
+        <h2>Create a new Class</h2>
+        <span class="subt" id="create-account-error"></span>
+        <label><span>Name of Class</span><input type="name" name="name" required></label>
+        <input type="submit" value="Create Class">
+      </form>
     </div>
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script src="jquery-3.1.1.min.js"></script>
     <script src="header.js"></script>
-    <script src="dash.js"></script>
+    <script src="newclass.js"></script>
   </body>
 </html>
