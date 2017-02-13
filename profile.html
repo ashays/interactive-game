@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="An engaging, interactive, and smart twist on education">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/10bed1efe5.css">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <title>Dashboard | ConnectEd</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1><a href="dash.html">Connect<strong>Ed</strong></a></h1>
+        <div class="menu">
+          <div class="menu-btn" title="Profile"><a href="profile.html"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span id="user-name"></span></a></div>
+          <div class="menu-btn" id="btn-logout" title="Logout"><i class="fa fa-sign-out" aria-hidden="true"></i></div>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <div class="panel" style="display: block;">
+        <div class="button-right" id="changePasswordButton">Change Password</div>
+        <div class="button-right" id="cancelProfileUpdateButton" style="display: none">Cancel</div>
+        <div class="button-right" id="updateProfileInformationButton" style="display: none">Update</div>
+        <h2>Profile</h2>
+        <ul>
+            <li id="changeUserName">
+              Name: <span id="users-name"></span><input type="text" style="display: none" id="updatedName">
+            </li>
+            <li id="changeEmailId">
+              Email: <span id="users-email"></span><input type="text" style="display: none" id="updatedEmail">
+            </li>
+            <li class="reauthenticate" style="display: none">Please Provide your original email and password</li>
+            <li class="reauthenticate" style="display: none">Email: <input type="email" id="reauthenticateEmail" required></li>
+            <li class="reauthenticate" style="display: none">Password: <input type="password" id="reauthenticatePassword" required></li>
+            <li style="display: none" id="change-password-field">New Password: <input type="password" id="newPassword" required></li>
+        </ul>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="header.js"></script>
+    <script src="profile.js"></script>
+  </body>
+</html>

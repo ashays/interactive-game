@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="An engaging, interactive, and smart twist on education">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <title>Login | ConnectEd</title>
+  </head>
+  <body class="special">
+    <h1>Connect<strong>Ed</strong></h1>
+    <div class="container">
+      <form id="login">
+        <h2>Login</h2>
+        <span class="subt" id="login-error"></span>
+        <span class="subt">Don't have an account? <span id="btn-create-account">Sign up</span></span>
+        <label><span>Email</span><input type="email" name="email" required></label>
+        <label><span>Password</span><input type="password" name="password" required></label>
+        <input type="submit" value="Login">
+      </form>
+      <form id="create-account" style="display: none;">
+        <h2>Create an Account</h2>
+        <span class="subt" id="create-account-error"></span>
+        <span class="subt">Already have an account? <span id="btn-login">Login</span></span>
+        <label><span>Name</span><input type="name" name="name" required></label>
+        <label><span>Email</span><input type="email" name="email" required></label>
+        <label><span>Password</span><input type="password" name="password" required></label>
+        <!-- <label><span>Confirm Password</span><input type="password" name="password-confirm" required></label> -->
+        <input type="submit" value="Sign up">
+      </form>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAqRXiVfJf9ILLUDq3oJHOVBuMjieD5oHM",
+        authDomain: "interactive-game.firebaseapp.com",
+        databaseURL: "https://interactive-game.firebaseio.com",
+        storageBucket: "interactive-game.appspot.com",
+        messagingSenderId: "37935877805"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

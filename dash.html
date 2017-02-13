@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/10bed1efe5.css">
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <title>Dashboard | ConnectEd</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1><a href="dash.html">Connect<strong>Ed</strong></a></h1>
+        <div class="menu">
+          <div class="menu-btn" title="Profile"><a href="profile.html"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span id="user-name"></span></a></div>
+          <div class="menu-btn" id="btn-logout" title="Logout"><i class="fa fa-sign-out" aria-hidden="true"></i></div>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <div class="panel" id="my-classes-panel">
+        <a href="newclass.html"><div class="button-right">New Class</div></a>
+        <h2>Classes I Own</h2>
+        <ul></ul>
+      </div>
+      <div class="panel" id="classes-panel">
+        <h2>Classes I'm In</h2>
+        <ul>
+          <li>CS 1331</li>
+          <li>AP Computer Science</li>
+          <li>PSYC 2015</li>
+        </ul>
+      </div>
+      <div class="panel" id="no-classes-panel">
+        <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Welcome to ConnectEd! <strong>Students: </strong>Sit tight and follow your teacher's instructions to join his or her class. <strong>Instructors: </strong>Get started by <a href="newclass.html">creating a class</a> and inviting your students to join.</div>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="header.js"></script>
+    <script src="dash.js"></script>
+  </body>
+</html>
