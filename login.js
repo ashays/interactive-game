@@ -1,10 +1,15 @@
 $(document).ready(function() {
+	if (getUrlParameter("cid") == undefined) {
+		$('#join-class').hide();
+	}
+
 	$('#login').submit(function(e){
 		e.preventDefault();
 		var email = $(e.target.email).val();
 		var password = $(e.target.password).val();
 		firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-			window.location.href = "dash.html";
+			// TODO check if user has entry in users/ db? 
+			onLogin(false);
 		}, function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;
@@ -28,7 +33,7 @@ $(document).ready(function() {
 				  name: name,
 				  email: email
 				}).then(function() {
-					window.location.href = "dash.html";					
+					onLogin(true);
 				});
 			}, function(error) {
 				// TODO error handling
@@ -52,3 +57,24 @@ $(document).ready(function() {
 		$('#create-account').hide();
 	});
 });
+
+function onSignedIn() {
+	console.log("user is signed in?");
+	// window.location.replace("dash.html");
+}
+
+function onNotSignedIn() {
+}
+
+function onLogin(firstTime) {
+	if (getUrlParameter("cid") == undefined) {
+		if (firstTime) {
+			window.location.href = "newclass.html";
+		} else {
+			window.location.href = "dash.html";
+		}
+	} else {
+		window.location.href = "class.html?cid=" + getUrlParameter("cid");
+	}
+	
+}

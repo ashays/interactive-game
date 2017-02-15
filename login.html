@@ -9,6 +9,9 @@
   </head>
   <body class="special">
     <h1>Connect<strong>Ed</strong></h1>
+    <div class="container" id="join-class">
+      <p>You need a ConnectEd account to continue.<br>Login or sign up for an account below.</p>
+    </div>
     <div class="container">
       <form id="login">
         <h2>Login</h2>
@@ -28,21 +31,10 @@
         <!-- <label><span>Confirm Password</span><input type="password" name="password-confirm" required></label> -->
         <input type="submit" value="Sign up">
       </form>
-    </div>
-    
+    </div>    
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyAqRXiVfJf9ILLUDq3oJHOVBuMjieD5oHM",
-        authDomain: "interactive-game.firebaseapp.com",
-        databaseURL: "https://interactive-game.firebaseio.com",
-        storageBucket: "interactive-game.appspot.com",
-        messagingSenderId: "37935877805"
-      };
-      firebase.initializeApp(config);
-    </script>
     <script src="jquery-3.1.1.min.js"></script>
+    <script src="header.js"></script>
     <script src="login.js"></script>
   </body>
 </html>

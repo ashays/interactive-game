@@ -13,7 +13,7 @@ function onUserDataFunc() {
 			$('#my-classes-panel ul').empty();
 			userData.classesOwn.forEach(function(item, index) {
 				firebase.database().ref('classes/' + item + '/name').once('value', function(snapshot) {
-					$('#my-classes-panel ul').append('<li><a href="class.html?c=' + item + '">' + snapshot.val() + '</a></li>');
+					$('#my-classes-panel ul').append('<li><a href="class.html?cid=' + item + '">' + snapshot.val() + '</a></li>');
 				});
 			});
 		}

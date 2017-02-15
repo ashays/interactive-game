@@ -14,7 +14,7 @@ $(document).ready(function() {
 	firebase.auth().onAuthStateChanged(function(user) {
 	  if (user) {
 	    // User is signed in.
-	    $('#user-name').text(user.displayName);
+	    onSignedIn(user);
 	    var userRef = firebase.database().ref('users/' + user.uid);
 	    userRef.on('value', function(snapshot) {
 	      userData = snapshot.val();
@@ -22,9 +22,8 @@ $(document).ready(function() {
 	      onUserDataFunc();
 	    });
 	  } else {
-	  	console.log("error: no user signed in");
-	  	window.location.replace("index.html");
-	    // No user is signed in.
+	  	// No user is signed in.
+	  	onNotSignedIn();
 	  }
 	});
 
@@ -38,6 +37,15 @@ $(document).ready(function() {
 	})
 });
 
+function onSignedIn(user) {
+	$('#user-name').text(user.displayName);	
+}
+
+function onNotSignedIn() {
+	console.log("error: no user signed in");
+	window.location.replace("index.html");
+}
+
 function onUserDataFunc() {
 	console.log(userData);
 }
@@ -45,3 +53,18 @@ function onUserDataFunc() {
 function displayError(message) {
 	alert(message);
 }
+
+function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
