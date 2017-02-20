@@ -135,6 +135,12 @@ header .menu .menu-btn:hover {
     cursor: pointer;
 }
 
+.button.clicked {
+    color: #f44336;
+    background: #fff;
+    border: 1px solid;
+}
+
 .empty-message {
     font-size: 25px;
     text-align: center;
