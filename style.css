@@ -122,6 +122,15 @@ header .menu .menu-btn:hover {
     cursor: pointer;
 }
 
+.button {
+    background: #f44336;
+    color: #fff;
+    display: inline-block;
+    padding: 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
 .empty-message {
     font-size: 25px;
     text-align: center;

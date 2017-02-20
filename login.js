@@ -11,10 +11,7 @@ $(document).ready(function() {
 			// TODO check if user has entry in users/ db? 
 			onLogin(false);
 		}, function(error) {
-			// Handle Errors here.
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			$('#login-error').text(errorMessage);
+			displayError(error.message);
 		});
 	});
 
@@ -40,10 +37,7 @@ $(document).ready(function() {
 				// An error happened.
 			});
 		}, function(error) {
-		  // Handle Errors here.
-		  var errorCode = error.code;
-		  var errorMessage = error.message;
-		  $('#create-account-error').text(errorMessage);
+			displayError(error.message);
 		});
 	});
 
@@ -75,6 +69,11 @@ function onLogin(firstTime) {
 		}
 	} else {
 		window.location.href = "class.html?cid=" + getUrlParameter("cid");
-	}
-	
+	}	
+}
+
+function displayError(message) {
+	$('#login-error').text(message);
+	$('#create-account-error').text(message);
+	// alert(message);
 }
