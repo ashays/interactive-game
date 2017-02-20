@@ -47,6 +47,7 @@ function onUserDataFunc() {
 			}
 		}
 	});
+	// TODO 
 	// Check if person is in or owns class
 	if (userData.classesOwn) {
 		if ($.inArray(cid, userData.classesOwn.concat(userData.classesIn)) == -1) {
@@ -74,6 +75,7 @@ function approveJoin(user) {
 		classReq.splice($.inArray(user, classReq), 1);
 		var updates = {};
 		updates['/classes/' + cid + '/requests'] = classReq;
+		// TODO User can't join multiple classes currently
 		updates['/users/' + user + '/classesIn/'] = [cid];
 		return firebase.database().ref().update(updates);
 	}
@@ -88,5 +90,6 @@ function leaveClass() {
 		classesIn = userData.classesIn;
 		classesIn.splice($.inArray(cid, classesIn), 1);
 	}
-	return firebase.database().ref().update({'/users/' + userData.uid + '/classesIn/': classesIn});
+	var ref = '/users/' + userData.uid + '/classesIn/';
+	return firebase.database().ref().update({ref: classesIn});
 }
