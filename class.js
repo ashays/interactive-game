@@ -23,6 +23,7 @@ function onUserDataFunc() {
 		classInfo = snapshot.val();
 		if (classInfo == null) {
 			$('#no-class-panel').show();
+			$('#leave-btn').hide();
 		} else {
 			$('#class-info-panel h2').text(classInfo.name);
 			document.title = classInfo.name + " | ConnectEd";
@@ -31,7 +32,6 @@ function onUserDataFunc() {
 				$('#leave-btn').hide();
 			} else {
 				$('#invite-btn').hide();
-				$('#leave-btn').show();
 			}
 			$('#class-info-panel').show();
 			if (classInfo.owner == userData.uid && classInfo.requests) {
@@ -46,9 +46,18 @@ function onUserDataFunc() {
 		}
 	});
 	// Check if person is in or owns class
-	if ($.inArray(cid, userData.classesOwn.concat(userData.classesIn)) == -1) {
-		console.log("invalid permissions");
-		$('#not-in-class-panel').show();
+	if (userData.classesOwn) {
+		if ($.inArray(cid, userData.classesOwn.concat(userData.classesIn)) == -1) {
+			console.log("invalid permissions");
+			$('#not-in-class-panel').show();
+			$('#leave-btn').hide();
+		}		
+	} else {
+		if ($.inArray(cid, userData.classesIn) == -1) {
+			console.log("invalid permissions");
+			$('#not-in-class-panel').show();
+			$('#leave-btn').hide();
+		}
 	}
 }
 
