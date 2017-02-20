@@ -88,15 +88,19 @@ header .menu .menu-btn:hover {
 }
 
 .panel ul li {
-    /*padding: 10px;*/
+    padding: 10px;
     background: #eee;
     cursor: pointer;
     border-left: 3px solid transparent;
     transition: all .3s;
 }
 
+.panel ul li i {
+    float: right;
+}
+
 .panel ul li a {
-    padding: 10px;
+    /*padding: 10px;*/
     color: inherit;
     text-decoration: none;
     display: block;
@@ -118,6 +122,15 @@ header .menu .menu-btn:hover {
     display: inline-block;
     padding: 10px;
     float: right;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.button {
+    background: #f44336;
+    color: #fff;
+    display: inline-block;
+    padding: 10px;
     font-size: 13px;
     cursor: pointer;
 }
