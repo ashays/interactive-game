@@ -36,8 +36,8 @@ function onUserDataFunc() {
 				$('#invite-btn').hide();
 			}
 			$('#class-info-panel').show();
+			$('#requests-panel ul').empty();
 			if (classInfo.owner == userData.uid && classInfo.requests) {
-				$('#requests-panel ul').empty();
 				classInfo.requests.forEach(function(item, index) {
 					firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
 						$('#requests-panel ul').append('<li onclick="approveJoin(\'' + item + '\')" data-user="' + item + '">' + snapshot.val() + '<i class="fa fa-check-circle" aria-hidden="true"></i></li>');
