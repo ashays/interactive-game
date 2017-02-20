@@ -82,11 +82,13 @@ function inviteStudentsPrompt() {
 }
 
 function leaveClass() {
+	console.log("leaving class")
 	if (userData.classesIn) {
 		classesIn = userData.classesIn;
 		classesIn.splice($.inArray(cid, classesIn), 1);
 	}
-	var ref = '/users/' + userData.uid + '/classesIn/';
+	var updates = {};
+	updates['/users/' + userData.uid + '/classesIn/'] = classesIn;
 	// TODO not currently error checking
-	return firebase.database().ref().update({ref: classesIn});
+	return firebase.database().ref().update(updates);
 }
