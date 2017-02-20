@@ -26,6 +26,13 @@ function onUserDataFunc() {
 		} else {
 			$('#class-info-panel h2').text(classInfo.name);
 			document.title = classInfo.name + " | ConnectEd";
+			if (classInfo.owner == userData.uid) {
+				$('#invite-btn').show();
+				$('#leave-btn').hide();
+			} else {
+				$('#invite-btn').hide();
+				$('#leave-btn').show();
+			}
 			$('#class-info-panel').show();
 			if (classInfo.owner == userData.uid && classInfo.requests) {
 				$('#requests-panel ul').empty();
@@ -59,4 +66,12 @@ function approveJoin(user) {
 		updates['/users/' + user + '/classesIn/'] = [cid];
 		return firebase.database().ref().update(updates);
 	}
+}
+
+function inviteStudentsPrompt() {
+	window.prompt("Share this link with your students!", window.location.href);
+}
+
+function leaveClass() {
+	
 }
