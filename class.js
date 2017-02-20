@@ -3,6 +3,7 @@ var classInfo;
 var classRef = firebase.database().ref('classes/' + cid);
 
 $(document).ready(function() {
+	$('#requested-join-btn').hide();
 	$('#join-class-btn').click(function() {
 		var classReq = [userData.uid];
 		if (classInfo.requests) {
@@ -12,8 +13,9 @@ $(document).ready(function() {
 			}
 		}
 		classRef.update({'/requests/': classReq});
+		$('#join-class-btn').hide();
+		$('#requested-join-btn').show();
 	});
-
 });
 
 function onUserDataFunc() {
@@ -82,5 +84,9 @@ function inviteStudentsPrompt() {
 }
 
 function leaveClass() {
-	
+	if (userData.classesIn) {
+		classesIn = userData.classesIn;
+		classesIn.splice($.inArray(cid, classesIn), 1);
+	}
+	return firebase.database().ref().update({'/users/' + userData.uid + '/classesIn/': classesIn});
 }
