@@ -26,7 +26,7 @@ function onUserDataFunc() {
 		// If class doesn't exist
 		if (classInfo == null) {
 			$('#no-class-panel').show();
-			$('#leave-btn').hide();
+			$('header.subhead').hide();
 		} else {
 			$('#class-info-panel h2').text(classInfo.name);
 			document.title = classInfo.name + " | ConnectEd";
