@@ -19,21 +19,22 @@ function onUserDataFunc() {
 			document.title = setInfo.name + " | ConnectEd";
 			// Fill the page with the questions of the set
 			$('#questions-panel').empty();
-			for (qIndex in setInfo.questions) {
-				addQuestionBlock(qIndex, setInfo.questions[qIndex]);
-			}
-			// Auto-save each question when something changes
-			$('.question-block input').change(autosaveQuestionEdit);
-			$('.question-block textarea').change(autosaveQuestionEdit);
-
-			$('#questions-panel').show();
 			if (setInfo.owner == userData.uid) {
 				// If user is owner of set, allow them to edit/ add questions
-				// TODO
+				for (qIndex in setInfo.questions) {
+					addQuestionBlock(qIndex, setInfo.questions[qIndex], true);
+				}
+				// Auto-save each question when something changes
+				$('.question-block input').change(autosaveQuestionEdit);
+				$('.question-block textarea').change(autosaveQuestionEdit);
 			} else {
-				// Not the owner! What happens? Can't edit! Can view?
-				// TODO
+				// If the user is not the owner, he or she can only view the questions
+				$('#add-btn').hide();
+				for (qIndex in setInfo.questions) {
+					addQuestionBlock(qIndex, setInfo.questions[qIndex], false);
+				}				
 			}
+			$('#questions-panel').show();
 		}
 	});
 }
@@ -52,14 +53,17 @@ function autosaveQuestionEdit(event) {
 }
 
 function onNotSignedIn() {
-	// Can users who aren't signed in see contents of a question set?
-	// window.location.replace("login.html?cid=" + cid);
+	window.location.replace("login.html?qid=" + qid);
 }
 
-function addQuestionBlock(index, question) {
+function addQuestionBlock(index, question, canEdit) {
 	var qBlockMarkup = "";
 	if (question.type == "flashcard") {
-		qBlockMarkup = '<div class="question-block" data-num="' + index + '"><input class="answer" data-type="answer" type="text" value="' + question.answer + '"><textarea class="question" data-type="question">' + question.question + '</textarea></div>';
+		if (canEdit) {
+			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '"><div class="fancy-block-btn" title="Delete Question"><i class="fa fa-trash" aria-hidden="true"></i></div><input class="answer" data-type="answer" type="text" value="' + question.answer + '"><textarea class="question" data-type="question">' + question.question + '</textarea></div>';
+		} else {
+			qBlockMarkup = '<div class="question-block" data-num="' + index + '"><input class="answer" data-type="answer" type="text" value="' + question.answer + '" readonly><div class="question" data-type="question">' + question.question + '</div></div>';
+		}
 	}
 	$('#questions-panel').append(qBlockMarkup);
 }

@@ -61,15 +61,15 @@ function onNotSignedIn() {
 }
 
 function onLogin(firstTime) {
-	if (getUrlParameter("cid") == undefined) {
-		if (firstTime) {
-			window.location.href = "newclass.html";
-		} else {
-			window.location.href = "dash.html";
-		}
-	} else {
+	if (getUrlParameter("cid")) {
 		window.location.href = "class.html?cid=" + getUrlParameter("cid");
-	}	
+	} else if (getUrlParameter("qid")) {
+		window.location.href = "set.html?qid=" + getUrlParameter("qid");
+	} else if (firstTime) {
+		window.location.href = "newclass.html";
+	} else {
+		window.location.href = "dash.html";
+	}
 }
 
 function displayError(message) {
