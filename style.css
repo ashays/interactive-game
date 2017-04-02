@@ -255,3 +255,35 @@ body.special {
 #login-error, #create-account-error {
     color: red;
 }
+
+.question-block {
+    display: block;
+    padding: 15px;
+    background: #ecf0f1;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.question-block .answer {
+    font-size: 22px;
+    margin: 5px 0;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    padding: 5px;
+    background: none;
+    border: none;
+}
+
+.question-block .question {
+    font-size: 18px;
+    margin: 5px 0;
+    display: block;
+    width: 100%;
+    font-family: inherit;
+    padding: 5px;
+    background: none;
+    border: none;
+    min-height: 60px;
+}
+

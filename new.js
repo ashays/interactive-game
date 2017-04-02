@@ -7,7 +7,7 @@ $(document).ready(function() {
 			window.location.href = "dash.html";
 		}, function(error) {
 			displayError(error.message);
-		});;
+		});
 	});
 
 	$('#create-set').submit(function(e){

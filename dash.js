@@ -25,5 +25,14 @@ function onUserDataFunc() {
 				});
 			});
 		}
+		if (userData.mySets) {
+			$('#sets-panel').show();
+			$('#sets-panel ul').empty();
+			userData.mySets.forEach(function(item, index) {
+				firebase.database().ref('sets/' + item + '/name').once('value', function(snapshot) {
+					$('#sets-panel ul').append('<li><a href="set.html?qid=' + item + '">' + snapshot.val() + '</a></li>');
+				});
+			});			
+		}
 	}
 }

@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/10bed1efe5.css">
     <link rel="stylesheet" type="text/css" href="style.css"/>
-    <title>Dashboard | ConnectEd</title>
+    <title>ConnectEd</title>
   </head>
   <body>
     <header>
@@ -18,32 +18,26 @@
         </div>
       </div>
     </header>
+
+    <header class="subhead">
+      <div class="container" id="class-info-panel">
+        <h2><!-- Question Set Name --></h2>
+        <div class="menu">
+          <div class="menu-btn" id="add-btn" title="Add Question" onclick="addQuestion()"><i class="fa fa-plus" aria-hidden="true"></i><span>Add Question</span></div>
+        </div>
+      </div>
+    </header>
+
     <div class="container">
-      <div class="panel" id="my-classes-panel">
-        <a href="newclass.html"><div class="button-right">New Class</div></a>
-        <h2>Classes I Own</h2>
-        <ul></ul>
-      </div>
-      <div class="panel" id="sets-panel">
-        <a href="newset.html"><div class="button-right">New Question Set</div></a>
-        <h2>My Question Sets</h2>
-        <ul></ul>
-      </div>
-      <div class="panel" id="classes-panel">
-        <h2>Classes I'm In</h2>
-        <ul>
-          <li>CS 1331</li>
-          <li>AP Computer Science</li>
-          <li>PSYC 2015</li>
-        </ul>
-      </div>
-      <div class="panel" id="no-classes-panel">
-        <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Welcome to ConnectEd! <strong>Students: </strong>Sit tight and follow your teacher's instructions to join his or her class. <strong>Instructors: </strong>Get started by <a href="newclass.html">creating a class</a> and inviting your students to join.</div>
+      <div class="panel" id="questions-panel"></div>
+      <div class="panel" id="no-set-panel">
+        <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><strong>Oops! </strong>We couldn't find the question set you're looking for. Check that you typed the URL in correctly or visit our <a href="help">help center</a>.</div>
       </div>
     </div>
+
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script src="jquery-3.1.1.min.js"></script>
     <script src="header.js"></script>
-    <script src="dash.js"></script>
+    <script src="set.js"></script>
   </body>
 </html>
