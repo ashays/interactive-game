@@ -31,6 +31,7 @@ function onUserDataFunc() {
 		} else {
 			$('#class-info-panel h2').text(classInfo.name);
 			document.title = classInfo.name + " | ConnectEd";
+			$('#alert-panel').empty();
 			if (classInfo.owner == userData.uid) {
 				$('#invite-btn').show();
 				$('#new-game-btn').show();
@@ -129,6 +130,17 @@ function approveJoin(user, name) {
 		});
 	}
 }
+
+function addAlert(message, type) {
+	if (type == "help") {
+		$('#alert-panel').append('<div class="alert"><i class="fa fa-question-circle" aria-hidden="true"></i>' + message + '</div>');
+	} else if (type == "error") {
+		$('#alert-panel').append('<div class="alert error"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' + message + '</div>');
+		// TODO combine this add alert with game.js function
+	}
+	$('#alert-panel').show();
+}
+
 
 function inviteStudentsPrompt() {
 	window.prompt("Share this link with your students!", window.location.href);
