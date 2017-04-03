@@ -49,14 +49,16 @@ function onUserDataFunc() {
 			$('header.subhead').hide();
 		} else {
 			$('.subhead .menu-btn').hide();
+			$('#alert-panel').empty();
 			$('.panel').hide();
 			if (gameInfo.owner == userData.uid) {
 				// User is instructor/ admin of game
 				console.log("owner");
 				if (gameInfo.status == "waiting") {
 					$('#start-btn').show();
-					$('#settings-panel').show();
+					addAlert("A new game has been created! Adjust the game settings below and instruct your students to join the game on their devices.", "help");
 					// Settings panel
+					$('#settings-panel').show();
 					$('#question-sets').empty();
 					userData.mySets.forEach(function(item, index) {
 						firebase.database().ref('sets/' + item + '/name').once('value', function(snapshot) {
@@ -84,9 +86,12 @@ function onUserDataFunc() {
 				if ($.inArray(userData.uid, gameInfo.participants) == -1) {
 					// User has not joined game
 					$('#join-btn').show();
+					addAlert("Your instructor has created a game. Tap 'Join Game' above to participate.", "help");
 				} else {
 					// User has joined game
-					if (gameInfo.status == "started") {
+					if (gameInfo.status == "waiting") {
+						addAlert("Waiting for more students to join. The game will begin on your instructor's mark.", "help");
+					} else if (gameInfo.status == "started") {
 						if (gameInfo.round[userData.uid].matched) {
 							showScoreboard();
 						} else {
@@ -99,16 +104,19 @@ function onUserDataFunc() {
 			}
 			if (gameInfo.status == "waiting") {
 				// Show game participants
+				$('#participants-panel ul').empty();
 				if (gameInfo.participants) {
-					$('#participants-panel ul').empty();
+					$('#participants-panel h3').text('Game Participants');
 					gameInfo.participants.forEach(function(item, index) {
 						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
 							userIDtoName[item] = snapshot.val();
 							$('#participants-panel ul').append('<li>' + snapshot.val() + '</li>');
 						});
 					});
-					$('#participants-panel').show();
+				} else {
+					$('#participants-panel h3').text('No Game Participants');
 				}
+				$('#participants-panel').show();
 			} else if (gameInfo.status == "started") {
 				$('#instructions-panel').show();
 				if (gameInfo.participants) {
@@ -144,6 +152,19 @@ function showScoreboard() {
 		}
 	}
 	$('#scoreboard-panel').show();
+}
+
+function addAlert(message, type) {
+	if (type == "help") {
+		$('#alert-panel').append('<div class="alert"><i class="fa fa-question-circle" aria-hidden="true"></i>' + message + '</div>');
+	} else if (type == "error") {
+		$('#alert-panel').append('<div class="alert error"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' + message + '</div>');
+		// TODO remove error alerts after x seconds
+		// setTimeout(function() {
+		//   $("#the-tag-you-want-to-remove").remove();
+		// }, 5000);
+	}
+	$('#alert-panel').show();
 }
 
 function startTimer(duration) {
@@ -226,7 +247,17 @@ function updateHeader() {
 	}
 }
 
+function displayError(message) {
+	addAlert(message, "error");
+	console.error(message);
+}
+
 function startGame() {
+	// Must be at least 2 participants
+	if (!gameInfo.participants || gameInfo.participants.length < 2) {
+		displayError("There must be at least two participants to begin this game.");
+		return;
+	}
 	// TODO fix timer glitchiness
 	clearInterval(theTimer);
 	theTimer = undefined;
@@ -236,7 +267,6 @@ function startGame() {
 		questions[qNum].number = qNum;
 	}
 	shuffle(questions);
-	console.log(questions);
 	// TODO filter so only flashcard questions
 	var participants = gameInfo.participants;
 	shuffle(participants);

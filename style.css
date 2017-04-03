@@ -436,3 +436,25 @@ body.special {
     padding: 15px 0;
     font-size: 50px;
 }
+
+.alert {
+    background: #f39c12;
+    color: #fff;
+    padding: 10px 15px;
+    padding-left: 45px;
+    margin: 10px 15px;
+    border-radius: 5px;
+    font-size: 15px;
+    position: relative;
+}
+
+.alert.error {
+    background: #c0392b;
+}
+
+.alert .fa {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    margin-top: -8px;
+}
