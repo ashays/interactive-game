@@ -33,6 +33,17 @@ function onUserDataFunc() {
 			if (classInfo.owner == userData.uid) {
 				$('#invite-btn').show();
 				$('#leave-btn').hide();
+				// Class join requests
+				$('#requests-panel').hide();
+				$('#requests-panel ul').empty();
+				if (classInfo.requests) {
+					classInfo.requests.forEach(function(item, index) {
+						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
+							$('#requests-panel ul').append('<li onclick="approveJoin(\'' + item + '\', \'' + snapshot.val() + '\')" data-user="' + item + '">' + snapshot.val() + '<i class="fa fa-check-circle" aria-hidden="true"></i></li>');
+						});
+					});
+					$('#requests-panel').show();
+				}
 			} else {
 				$('#invite-btn').hide();
 				$('#leave-btn').show();
@@ -42,30 +53,21 @@ function onUserDataFunc() {
 				console.log("invalid permissions");
 				$('#not-in-class-panel').show();
 				$('#leave-btn').hide();
-			}
-			$('#class-info-panel').show();
-			$('#requests-panel').hide();
-			$('#requests-panel ul').empty();
-			if (classInfo.owner == userData.uid && classInfo.requests) {
-				classInfo.requests.forEach(function(item, index) {
-					firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
-						$('#requests-panel ul').append('<li onclick="approveJoin(\'' + item + '\', \'' + snapshot.val() + '\')" data-user="' + item + '">' + snapshot.val() + '<i class="fa fa-check-circle" aria-hidden="true"></i></li>');
+			} else {
+				$('#games-panel ul').empty();
+				if (classInfo.currentGame) {
+					firebase.database().ref('games/' + classInfo.currentGame + '/date').once('value', function(snapshot) {
+						$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
 					});
-				});
-				$('#requests-panel').show();
-			}
-			if (classInfo.currentGame) {
-				firebase.database().ref('games/' + classInfo.currentGame + '/date').once('value', function(snapshot) {
-					$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
-				});
-				$('#games-panel').show();
-			}
-			if (classInfo.games) {
-				classInfo.games.forEach(function(item, index) {
-					firebase.database().ref('games/' + item + '/date').once('value', function(snapshot) {
-						$('#games-panel ul').append('<li><a href="game.html?gid=' + item + '">' + snapshot.val() + '</a></li>');
+					$('#games-panel').show();
+				}
+				if (classInfo.games) {
+					classInfo.games.forEach(function(item, index) {
+						firebase.database().ref('games/' + item + '/date').once('value', function(snapshot) {
+							$('#games-panel ul').append('<li><a href="game.html?gid=' + item + '">' + snapshot.val() + '</a></li>');
+						});
 					});
-				});
+				}
 			}
 		}
 	});

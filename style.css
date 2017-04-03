@@ -267,11 +267,16 @@ body.special {
     text-decoration: underline;
 }
 
-#login-error, #create-account-error {
+#login-error, #create-account-error, .subt.error {
     color: red;
 }
 
-.question-block {
+.instructions {
+    color: #7f8c8d;
+    text-align: center;
+}
+
+.question-block, .block {
     display: block;
     padding: 15px;
     background: #ecf0f1;
@@ -286,7 +291,7 @@ body.special {
     margin-left: 0px;
 }
 
-.question-block .answer {
+.question-block .answer, .block .prompt {
     font-size: 22px;
     margin: 5px 0;
     font-weight: bold;
