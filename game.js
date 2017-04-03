@@ -70,10 +70,12 @@ function onUserDataFunc() {
 				} else if (gameInfo.status == "started") {
 					$('#restart-btn').show();
 					showScoreboard();
-					$('#timer-panel').show();
-					if (! theTimer) {
-						console.log("start timer");
-						startTimer(Number(gameInfo.settings.timer) * 60);						
+					if (gameInfo.settings && gameInfo.settings.timer) {
+						$('#timer-panel').show();
+						if (! theTimer) {
+							console.log("start timer");
+							startTimer(Number(gameInfo.settings.timer) * 60);
+						}						
 					}
 				}
 			} else {
