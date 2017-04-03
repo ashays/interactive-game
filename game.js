@@ -2,7 +2,8 @@ var gid = getUrlParameter('gid');
 var gameInfo;
 var qSet;
 var classInfo;
-var participantInfo = {};
+var userIDtoName = {};
+var nameToUserID = {};
 
 $(document).ready(function() {
 	$('#submit-answer').submit(function(e){
@@ -17,7 +18,7 @@ $(document).ready(function() {
 			};
 			var updates = {};
 			updates['/games/' + gid + '/round/' + userData.uid + '/matched/'] = true;
-			updates['/games/' + gid + '/round/' + participantInfo[answer] + '/matched/'] = true;
+			updates['/games/' + gid + '/round/' + nameToUserID[answer] + '/matched/'] = true;
 			if (gameInfo.scoreboard) {
 				updates['/games/' + gid + '/scoreboard/' + gameInfo.scoreboard.length] = match;
 			} else {
@@ -52,6 +53,7 @@ function onUserDataFunc() {
 				if (gameInfo.status == "waiting") {
 					$('#start-btn').show();
 				} else if (gameInfo.status == "started") {
+					$('#restart-btn').show();
 					showScoreboard();
 				}
 			} else {
@@ -79,7 +81,7 @@ function onUserDataFunc() {
 					$('#participants-panel ul').empty();
 					gameInfo.participants.forEach(function(item, index) {
 						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
-							participantInfo[item] = snapshot.val();
+							userIDtoName[item] = snapshot.val();
 							$('#participants-panel ul').append('<li>' + snapshot.val() + '</li>');
 						});
 					});
@@ -90,7 +92,8 @@ function onUserDataFunc() {
 				if (gameInfo.participants) {
 					gameInfo.participants.forEach(function(item, index) {
 						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
-							participantInfo[snapshot.val().toLowerCase()] = item;
+							userIDtoName[item] = snapshot.val();
+							nameToUserID[snapshot.val().toLowerCase()] = item;
 						});
 					});
 				}
@@ -164,11 +167,12 @@ function startGame() {
 	for (i = 0; i < participants.length - 1; i+=2) {
 		var question = questions.pop();
 		round[participants[i]] = {prompt: question.question, answer: question.number};
-		round[participantInfo[participants[i]].toLowerCase()] = question.number;
+		round[userIDtoName[participants[i]].toLowerCase()] = question.number;
 		round[participants[i+1]] = {prompt: question.answer, answer: question.number};
-		round[participantInfo[participants[i+1]].toLowerCase()] = question.number;
+		round[userIDtoName[participants[i+1]].toLowerCase()] = question.number;
 	}
 	var updates = {};
+	updates['/games/' + gid + '/scoreboard'] = [];
 	updates['/games/' + gid + '/round'] = round;
 	updates['/games/' + gid + '/status'] = "started";
 	firebase.database().ref().update(updates).then(function() {
