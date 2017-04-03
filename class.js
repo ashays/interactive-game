@@ -54,7 +54,54 @@ function onUserDataFunc() {
 				});
 				$('#requests-panel').show();
 			}
+			if (classInfo.currentGame) {
+				firebase.database().ref('games/' + classInfo.currentGame + '/date').once('value', function(snapshot) {
+					$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
+				});
+				$('#games-panel').show();
+			}
+			if (classInfo.games) {
+				classInfo.games.forEach(function(item, index) {
+					firebase.database().ref('games/' + item + '/date').once('value', function(snapshot) {
+						$('#games-panel ul').append('<li><a href="game.html?gid=' + item + '">' + snapshot.val() + '</a></li>');
+					});
+				});
+			}
 		}
+	});
+	if (userData.mySets) {
+		$('#create-game-panel').show();
+		$('#create-game-panel ul').empty();
+		userData.mySets.forEach(function(item, index) {
+			firebase.database().ref('sets/' + item + '/name').once('value', function(snapshot) {
+				$('#create-game-panel ul').append('<li onclick="startGame(\'' + item + '\')">' + snapshot.val() + '</li>');
+			});
+		});			
+	}
+}
+
+function startGame(qid) {
+	console.log(qid);
+	var newGame = {
+		type: "matching",
+		date: new Date().toJSON(),
+		owner: userData.uid,
+		class: cid,
+		set: qid,
+		status: "waiting"
+	};
+	var newGameKey = firebase.database().ref().child('games').push().key;
+	if (classInfo.currentGame) {
+		// If there is a game in progress, end the game and start the new game
+		// TODO
+	}
+	var updates = {};
+	updates['/classes/' + cid + '/currentGame'] = newGameKey;
+	updates['/games/' + newGameKey] = newGame;
+	firebase.database().ref().update(updates).then(function() {
+		window.location.href = "game.html?gid=" + newGameKey;
+	}, function(error) {
+		displayError(error.message);
 	});
 }
 

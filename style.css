@@ -131,6 +131,21 @@ header .menu .menu-btn:hover {
     color: #3498db;
 }
 
+.panel ul li .tag {
+    float: right;
+    background: #f39c12;
+    color: #fff;
+    padding: 3px 5px;
+    font-size: 11px;
+    text-transform: uppercase;
+    border-radius: 5px;
+}
+
+.panel ul li .tag i {
+    float: none;
+    margin-right: 5px;
+}
+
 .panel .button-right {
     background: #3498db;
     color: #fff;
