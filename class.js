@@ -61,6 +61,10 @@ function onUserDataFunc() {
 						$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
 					});
 					$('#games-panel').show();
+				} else {
+					if (classInfo.owner == userData.uid) {
+						addAlert("Get started by inviting your students to join this class. Then, creating and play a game to engage your students with the course material.", "help");
+					}
 				}
 				if (classInfo.games) {
 					classInfo.games.forEach(function(item, index) {
