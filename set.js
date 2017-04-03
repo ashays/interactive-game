@@ -75,7 +75,11 @@ function addQuestion() {
 		answer: "Term"
 	};
 	var updates = {};
-	updates['/sets/' + qid + '/questions/' + setInfo.questions.length] = templateQuestion;
+	if (setInfo.questions) {
+		updates['/sets/' + qid + '/questions/' + setInfo.questions.length] = templateQuestion;
+	} else {
+		updates['/sets/' + qid + '/questions/'] = [templateQuestion];
+	}
 	firebase.database().ref().update(updates).then(function() {
 		console.log('question added');
 	}, function(error) {

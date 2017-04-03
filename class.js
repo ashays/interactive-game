@@ -85,7 +85,7 @@ function onUserDataFunc() {
 function startGame(qid) {
 	console.log(qid);
 	var newGame = {
-		type: "matching",
+		type: "MatchMe",
 		date: new Date().toJSON(),
 		owner: userData.uid,
 		class: cid,
