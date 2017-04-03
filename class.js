@@ -122,7 +122,11 @@ function approveJoin(user, name) {
 		var listOfClasses;
 		firebase.database().ref('users/' + user + '/classesIn').once('value', function(snapshot){
 			listOfClasses = snapshot.val();
-			updates['/users/' + user + '/classesIn/' + listOfClasses.length] = cid;	
+			if (listOfClasses) {
+				updates['/users/' + user + '/classesIn/' + listOfClasses.length] = cid;					
+			} else {
+				updates['/users/' + user + '/classesIn/'] = [cid];
+			}
 			// TODO not currently error checking
 			firebase.database().ref().update(updates).then(function() {
 				$('#requests-panel .subt').text(name + " was successfully added to the class.");
