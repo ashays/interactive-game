@@ -10,7 +10,26 @@ $(document).ready(function() {
 		var answer = $(e.target.answer).val().toLowerCase();
 		if (gameInfo.round[answer] == gameInfo.round[userData.uid].answer) {
 			console.log("correct");
+			var match = {
+				question: qSet.questions[gameInfo.round[userData.uid].answer].question,
+				answer: qSet.questions[gameInfo.round[userData.uid].answer].answer,
+				people: [answer, userData.name]
+			};
+			var updates = {};
+			updates['/games/' + gid + '/round/' + userData.uid + '/matched/'] = true;
+			updates['/games/' + gid + '/round/' + participantInfo[answer] + '/matched/'] = true;
+			if (gameInfo.scoreboard) {
+				updates['/games/' + gid + '/scoreboard/' + gameInfo.scoreboard.length] = match;
+			} else {
+				updates['/games/' + gid + '/scoreboard/'] = [match];
+			}
+			firebase.database().ref().update(updates).then(function() {
+				console.log("match made");
+			}, function(error) {
+				displayError(error.message);
+			});
 		} else {
+			$('#submit-answer .error').text("You matched with the wrong person! Try again");
 			console.log("incorrect");
 		}
 	});
@@ -33,7 +52,7 @@ function onUserDataFunc() {
 				if (gameInfo.status == "waiting") {
 					$('#start-btn').show();
 				} else if (gameInfo.status == "started") {
-					// Show scoreboard
+					showScoreboard();
 				}
 			} else {
 				// User is student in class and has permission to participant in game
@@ -44,9 +63,13 @@ function onUserDataFunc() {
 				} else {
 					// User has joined game
 					if (gameInfo.status == "started") {
-						// Show prompt
-						$('#prompt-panel .prompt').text(gameInfo.round[userData.uid].prompt);
-						$('#prompt-panel').show();
+						if (gameInfo.round[userData.uid].matched) {
+							showScoreboard();
+						} else {
+							// Show prompt
+							$('#prompt-panel .prompt').text(gameInfo.round[userData.uid].prompt);
+							$('#prompt-panel').show();							
+						}
 					}
 				}
 			}
@@ -63,6 +86,7 @@ function onUserDataFunc() {
 					$('#participants-panel').show();
 				}
 			} else if (gameInfo.status == "started") {
+				$('#instructions-panel').show();
 				if (gameInfo.participants) {
 					gameInfo.participants.forEach(function(item, index) {
 						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
@@ -83,6 +107,18 @@ function onUserDataFunc() {
 			});
 		}
 	});
+}
+
+function showScoreboard() {
+	// Show scoreboard
+	$('#scoreboard-panel').empty();
+	if (gameInfo.scoreboard) {
+		for (ind in gameInfo.scoreboard) {
+			rankBlock = '<div class="question-block"><div class="answer">' + gameInfo.scoreboard[ind].answer + '</div><div class="question">' + gameInfo.scoreboard[ind].question + '</div><div class="people"><span>' + (Number(ind) + 1) + ' </span>' + gameInfo.scoreboard[ind].people[0] + ' & ' + gameInfo.scoreboard[ind].people[1] + '</div></div>';
+			$('#scoreboard-panel').append(rankBlock);
+		}
+	}
+	$('#scoreboard-panel').show();
 }
 
 function joinGame() {
