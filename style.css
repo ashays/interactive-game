@@ -93,6 +93,10 @@ header .menu .menu-btn:hover {
     background: rgba(0, 0, 0, .1);
 }
 
+h3 i {
+    margin-right: 10px;
+}
+
 .panel {
     display: none;
 }
@@ -103,11 +107,13 @@ header .menu .menu-btn:hover {
 }
 
 .panel ul li {
-    padding: 10px;
+    padding: 15px;
     background: #eee;
     cursor: pointer;
     border-left: 3px solid transparent;
     transition: all .3s;
+    position: relative;
+    min-height: 50px;
 }
 
 .panel ul li i {
@@ -115,10 +121,15 @@ header .menu .menu-btn:hover {
 }
 
 .panel ul li a {
-    /*padding: 10px;*/
     color: inherit;
     text-decoration: none;
     display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 15px;
 }
 
 .panel ul li:nth-child(odd) {
@@ -154,6 +165,11 @@ header .menu .menu-btn:hover {
     float: right;
     font-size: 13px;
     cursor: pointer;
+    transition: all .3s;
+}
+
+.panel .button-right:hover {
+    background: #2980b9;
 }
 
 .button {
@@ -284,6 +300,11 @@ body.special {
     margin: 10px 15px;
     position: relative;
     transition: all .3s;
+    color: #2c3e50;
+}
+
+.block h3 {
+    margin: 10px 0 15px;
 }
 
 .question-block.admin:hover {
@@ -356,4 +377,62 @@ body.special {
 
 .fancy-block-btn:hover {
     color: #95a5a6;
+}
+
+.block .block-area {
+    border-top: 3px solid #dddddd;
+    padding-top: 10px;
+    margin: 10px 0;
+}
+
+.block .block-area .area-head {
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.block .block-area ul.options {
+    margin: 10px 0;
+}
+
+.block .block-area ul.options li {
+    padding: 10px;
+    min-height: 0;
+}
+
+.block .block-area ul.options li.selected {
+    background: #3498db;
+    color: #fff;
+}
+
+.panel ul li .detail {
+    opacity: 0;
+    transition: all .3s;
+    color: #2c3e50;
+    margin-left: 5px;
+    font-size: 15px;
+    line-height: 18px;
+}
+
+.panel ul li:hover .detail {
+    opacity: .5;
+}
+
+.panel ul li.selected .detail {
+    opacity: .75;
+    color: #fff;
+}
+
+#settings-panel input#settings-timer {
+    font-family: inherit;
+    color: inherit;
+    border: none;
+    width: 50px;
+    text-align: center;
+    padding: 5px;
+}
+
+#timer-panel {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 50px;
 }

@@ -4,8 +4,11 @@ var qSet;
 var classInfo;
 var userIDtoName = {};
 var nameToUserID = {};
+var theTimer;
 
 $(document).ready(function() {
+	$('#settings-use-timer').change(updateTimer);
+	$('#settings-timer').change(updateTimer);
 	$('#submit-answer').submit(function(e){
 		e.preventDefault();
 		var answer = $(e.target.answer).val().toLowerCase();
@@ -52,9 +55,26 @@ function onUserDataFunc() {
 				console.log("owner");
 				if (gameInfo.status == "waiting") {
 					$('#start-btn').show();
+					$('#settings-panel').show();
+					// Settings panel
+					$('#question-sets').empty();
+					userData.mySets.forEach(function(item, index) {
+						firebase.database().ref('sets/' + item + '/name').once('value', function(snapshot) {
+							if (gameInfo.set == item) {
+								$('#question-sets').append('<li onclick="updateSet(\'' + item + '\')" class="selected">' + snapshot.val() + '</li>');
+							} else {
+								$('#question-sets').append('<li onclick="updateSet(\'' + item + '\')">' + snapshot.val() + '</li>');
+							}
+						});
+					});
 				} else if (gameInfo.status == "started") {
 					$('#restart-btn').show();
 					showScoreboard();
+					$('#timer-panel').show();
+					if (! theTimer) {
+						console.log("start timer");
+						startTimer(Number(gameInfo.settings.timer) * 60);						
+					}
 				}
 			} else {
 				// User is student in class and has permission to participant in game
@@ -124,6 +144,61 @@ function showScoreboard() {
 	$('#scoreboard-panel').show();
 }
 
+function startTimer(duration) {
+	// TODO pause game when timer ends
+    var start = Date.now(),
+        diff,
+        minutes,
+        seconds;
+    function timer() {
+        // get the number of seconds that have elapsed since 
+        // startTimer() was called
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        // does the same job as parseInt truncates the float
+        minutes = (diff / 60) | 0;
+        seconds = (diff % 60) | 0;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        $('#timer-panel').text(minutes + ":" + seconds);
+
+        if (diff <= 0) {
+            // add one second so that the count down starts at the full duration
+            // example 05:00 not 04:59
+            start = Date.now() + 1000;
+        }
+    };
+    // we don't want to wait a full second before the timer starts
+    timer();
+    theTimer = setInterval(timer, 1000);
+}
+
+function updateSet(qid) {
+	var updates = {};
+	updates['/games/' + gid + '/set'] = qid;
+	firebase.database().ref().update(updates).then(function() {
+		console.log("set updated");
+	}, function(error) {
+		displayError(error.message);
+	});
+}
+
+function updateTimer() {
+	var updates = {};
+	if ($('#settings-use-timer').is(':checked')) {
+		updates['/games/' + gid + '/settings/timer'] = $('#settings-timer').val();
+	} else {
+		updates['/games/' + gid + '/settings/timer'] = null;
+	}
+	firebase.database().ref().update(updates).then(function() {
+		console.log("timer updated");
+	}, function(error) {
+		displayError(error.message);
+	});
+}
+
 function joinGame() {
 	// Add user to game's list of participants
 	var updates = {};
@@ -141,7 +216,7 @@ function joinGame() {
 
 function updateHeader() {
 	if (classInfo && qSet) {
-		$('#game-info-panel h2').text(classInfo.name + " " + qSet.name);
+		$('#game-info-panel h2').text(classInfo.name + ": " + qSet.name);
 	} else if (classInfo) {
 		$('#game-info-panel h2').text(classInfo.name);
 	} else {
@@ -150,6 +225,9 @@ function updateHeader() {
 }
 
 function startGame() {
+	// TODO fix timer glitchiness
+	clearInterval(theTimer);
+	theTimer = undefined;
 	// Pair all participants and assign everyone a question or answer
 	var questions = qSet.questions;
 	for (qNum in questions) {

@@ -20,6 +20,7 @@ $(document).ready(function() {
 
 function onUserDataFunc() {
 	$('.panel').hide();
+	$('.subhead .menu-btn').hide();
 	// Get class info
 	classRef.on('value', function(snapshot) {
 		classInfo = snapshot.val();
@@ -32,7 +33,7 @@ function onUserDataFunc() {
 			document.title = classInfo.name + " | ConnectEd";
 			if (classInfo.owner == userData.uid) {
 				$('#invite-btn').show();
-				$('#leave-btn').hide();
+				$('#new-game-btn').show();
 				// Class join requests
 				$('#requests-panel').hide();
 				$('#requests-panel ul').empty();
@@ -45,7 +46,6 @@ function onUserDataFunc() {
 					$('#requests-panel').show();
 				}
 			} else {
-				$('#invite-btn').hide();
 				$('#leave-btn').show();
 			}
 			// Check if person is in or owns class and we need to show join stuff
@@ -56,14 +56,14 @@ function onUserDataFunc() {
 			} else {
 				$('#games-panel ul').empty();
 				if (classInfo.currentGame) {
-					firebase.database().ref('games/' + classInfo.currentGame + '/date').once('value', function(snapshot) {
+					firebase.database().ref('games/' + classInfo.currentGame + '/type').once('value', function(snapshot) {
 						$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
 					});
 					$('#games-panel').show();
 				}
 				if (classInfo.games) {
 					classInfo.games.forEach(function(item, index) {
-						firebase.database().ref('games/' + item + '/date').once('value', function(snapshot) {
+						firebase.database().ref('games/' + item + '/type').once('value', function(snapshot) {
 							$('#games-panel ul').append('<li><a href="game.html?gid=' + item + '">' + snapshot.val() + '</a></li>');
 						});
 					});
@@ -71,31 +71,24 @@ function onUserDataFunc() {
 			}
 		}
 	});
-	if (userData.mySets) {
-		$('#create-game-panel').show();
-		$('#create-game-panel ul').empty();
-		userData.mySets.forEach(function(item, index) {
-			firebase.database().ref('sets/' + item + '/name').once('value', function(snapshot) {
-				$('#create-game-panel ul').append('<li onclick="startGame(\'' + item + '\')">' + snapshot.val() + '</li>');
-			});
-		});			
-	}
 }
 
-function startGame(qid) {
-	console.log(qid);
+function startGame() {
+	if (! userData.mySets) {
+		window.location.href = "newset.html";
+		return;
+	}
 	var newGame = {
 		type: "MatchMe",
 		date: new Date().toJSON(),
 		owner: userData.uid,
 		class: cid,
-		set: qid,
+		set: userData.mySets[0],
 		status: "waiting"
 	};
 	var newGameKey = firebase.database().ref().child('games').push().key;
 	if (classInfo.currentGame) {
-		// If there is a game in progress, end the game and start the new game
-		// TODO
+		// TODO If there is a game in progress, end the game and start the new game
 	}
 	var updates = {};
 	updates['/classes/' + cid + '/currentGame'] = newGameKey;
