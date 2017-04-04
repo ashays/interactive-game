@@ -3,24 +3,11 @@ var classInfo;
 var classRef = firebase.database().ref('classes/' + cid);
 
 $(document).ready(function() {
-	$('#requested-join-btn').hide();
-	$('#join-class-btn').click(function() {
-		var classReq = [userData.uid];
-		if (classInfo.requests) {
-			classReq = classInfo.requests;
-			if ($.inArray(userData.uid, classReq) == -1) {
-				classReq.push(userData.uid);
-			}
-		}
-		classRef.update({'/requests/': classReq});
-		$('#join-class-btn').hide();
-		$('#requested-join-btn').show();
-	});
+	$('.panel').hide();
+	$('.subhead .menu-btn').hide();
 });
 
 function onUserDataFunc() {
-	$('.panel').hide();
-	$('.subhead .menu-btn').hide();
 	// Get class info
 	classRef.on('value', function(snapshot) {
 		classInfo = snapshot.val();
@@ -31,41 +18,31 @@ function onUserDataFunc() {
 		} else {
 			$('#class-info-panel h2').text(classInfo.name);
 			document.title = classInfo.name + " | ConnectEd";
+			$('.panel').hide();
+			$('.subhead .menu-btn').hide();
 			$('#alert-panel').empty();
-			if (classInfo.owner == userData.uid) {
-				$('#invite-btn').show();
-				$('#new-game-btn').show();
-				// Class join requests
-				$('#requests-panel').hide();
-				$('#requests-panel ul').empty();
-				if (classInfo.requests) {
-					classInfo.requests.forEach(function(item, index) {
-						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
-							$('#requests-panel ul').append('<li onclick="approveJoin(\'' + item + '\', \'' + snapshot.val() + '\')" data-user="' + item + '">' + snapshot.val() + '<i class="fa fa-check-circle" aria-hidden="true"></i></li>');
-						});
-					});
-					$('#requests-panel').show();
-				}
-			} else {
-				$('#leave-btn').show();
-			}
 			// Check if person is in or owns class and we need to show join stuff
 			if ($.inArray(cid, [].concat(userData.classesIn).concat(userData.classesOwn)) == -1) {
-				console.log("invalid permissions");
+				// User is not enrolled in class and is not owner
 				$('#not-in-class-panel').show();
-				$('#leave-btn').hide();
+				$('#join-btn').show();
+				if (classInfo.requests && $.inArray(userData.uid, classInfo.requests) != -1) {
+					$('#join-btn').text("Join Pending Approval");
+				}
 			} else {
+				// User is either instructor or student in class
+				// Show list of games
 				$('#games-panel ul').empty();
 				$('#games-panel').show();
 				if (classInfo.currentGame) {
-					$('#games-panel h3').text("Games");
+					$('#games-panel h2').text("Games");
 					firebase.database().ref('games/' + classInfo.currentGame + '/type').once('value', function(snapshot) {
 						$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
 					});
 				} else {
-					$('#games-panel h3').text("No Games");
+					$('#games-panel h2').text("No Games");
 					if (classInfo.owner == userData.uid) {
-						addAlert("Get started by inviting your students to join this class. Then, creating and play a game to engage your students with the course material.", "help");
+						addAlert("Get started by inviting your students to join this class. Then, create and play a game to engage your students with the course material.", "help");
 					}
 				}
 				if (classInfo.games) {
@@ -75,12 +52,30 @@ function onUserDataFunc() {
 						});
 					});
 				}
+				if (classInfo.owner == userData.uid) {
+					// User is instructor
+					$('#invite-btn').show();
+					$('#new-game-btn').show();
+					// Class join requests
+					$('#requests-panel ul').empty();
+					if (classInfo.requests) {
+						classInfo.requests.forEach(function(item, index) {
+							firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
+								$('#requests-panel ul').append('<li onclick="approveJoin(\'' + item + '\', \'' + snapshot.val() + '\')" data-user="' + item + '">' + snapshot.val() + '<i class="fa fa-user-plus" aria-hidden="true"></i></li>');
+							});
+						});
+						$('#requests-panel').show();
+					}
+				} else {
+					// User is student in class
+					$('#leave-btn').show();
+				}
 			}
 		}
 	});
 }
 
-function startGame() {
+function createGame() {
 	if (! userData.mySets) {
 		window.location.href = "newset.html";
 		return;
@@ -109,6 +104,17 @@ function startGame() {
 
 function onNotSignedIn() {
 	window.location.replace("login.html?cid=" + cid);
+}
+
+function joinClass() {
+	var classReq = [userData.uid];
+	if (classInfo.requests) {
+		classReq = classInfo.requests;
+		if ($.inArray(userData.uid, classReq) == -1) {
+			classReq.push(userData.uid);
+		}
+	}
+	classRef.update({'/requests/': classReq});
 }
 
 function approveJoin(user, name) {

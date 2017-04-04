@@ -154,7 +154,7 @@ h3 i {
 
 .panel ul li .tag i {
     float: none;
-    margin-right: 5px;
+    margin: 0 5px;
 }
 
 .panel .button-right {
@@ -193,7 +193,7 @@ h3 i {
     color: #333;
     line-height: 35px;
     padding: 10px;
-    width: 450px;
+    max-width: 450px;
     margin: 0 auto;
 }
 
@@ -305,6 +305,10 @@ body.special {
 
 .block h3 {
     margin: 10px 0 15px;
+}
+
+.question-block.admin {
+    margin: 10px 15px;
 }
 
 .question-block.admin:hover {
@@ -460,7 +464,7 @@ body.special {
 }
 
 /* Mobile Styling */
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
     header .menu {
         float: none;
         text-align: center;
