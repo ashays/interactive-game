@@ -56,12 +56,14 @@ function onUserDataFunc() {
 				$('#leave-btn').hide();
 			} else {
 				$('#games-panel ul').empty();
+				$('#games-panel').show();
 				if (classInfo.currentGame) {
+					$('#games-panel h3').text("Games");
 					firebase.database().ref('games/' + classInfo.currentGame + '/type').once('value', function(snapshot) {
 						$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
 					});
-					$('#games-panel').show();
 				} else {
+					$('#games-panel h3').text("No Games");
 					if (classInfo.owner == userData.uid) {
 						addAlert("Get started by inviting your students to join this class. Then, creating and play a game to engage your students with the course material.", "help");
 					}
