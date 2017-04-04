@@ -60,7 +60,7 @@ function addQuestionBlock(index, question, canEdit) {
 	var qBlockMarkup = "";
 	if (question.type == "flashcard") {
 		if (canEdit) {
-			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '"><div class="fancy-block-btn" title="Delete Question"><i class="fa fa-trash" aria-hidden="true"></i></div><input class="answer" data-type="answer" type="text" value="' + question.answer + '"><textarea class="question" data-type="question">' + question.question + '</textarea></div>';
+			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '"><div class="fancy-block-btn" title="Delete Question" onclick="deleteQuestion(\'' + index + '\')"><i class="fa fa-trash" aria-hidden="true"></i></div><input class="answer" data-type="answer" type="text" value="' + question.answer + '"><textarea class="question" data-type="question">' + question.question + '</textarea></div>';
 		} else {
 			qBlockMarkup = '<div class="question-block" data-num="' + index + '"><input class="answer" data-type="answer" type="text" value="' + question.answer + '" readonly><div class="question" data-type="question">' + question.question + '</div></div>';
 		}
@@ -85,4 +85,18 @@ function addQuestion() {
 	}, function(error) {
 		displayError(error.message);
 	});
+}
+
+function deleteQuestion(qNum) {
+	var questions = setInfo.questions;
+	if (qNum < questions.length) {
+		questions.splice(qNum, 1);
+		var updates = {};
+		updates['/sets/' + qid + '/questions/'] = questions;
+		firebase.database().ref().update(updates).then(function() {
+			console.log('question deleted');
+		}, function(error) {
+			displayError(error.message);
+		});		
+	}
 }
