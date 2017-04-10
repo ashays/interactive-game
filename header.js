@@ -35,6 +35,12 @@ $(document).ready(function() {
 			displayError(error.message);
 		});
 	})
+
+	$('.overlay-close').click(function() {
+		$('.overlay').fadeOut({
+			complete: function() { $('.modal').hide(); }
+		});
+	});
 });
 
 function onSignedIn(user) {

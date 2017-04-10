@@ -155,7 +155,10 @@ function addAlert(message, type) {
 
 
 function inviteStudentsPrompt() {
-	window.prompt("Share this link with your students!", window.location.href);
+	$('#invite-modal').show();
+	$('.overlay').fadeIn();
+	$('#invite-link').val(window.location.href).select();
+	document.execCommand("copy");
 }
 
 function leaveClass() {
