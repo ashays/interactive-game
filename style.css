@@ -315,6 +315,12 @@ body.special {
     margin-left: 0px;
 }
 
+.question-block img {
+    margin: 5px 0;
+    max-width: 100%;
+    max-height: 200px;
+}
+
 .question-block .answer, .block .prompt {
     font-size: 22px;
     margin: 5px 0;
@@ -324,6 +330,7 @@ body.special {
     padding: 5px;
     background: none;
     border: none;
+    font-family: inherit;
 }
 
 .question-block .question {
@@ -358,16 +365,19 @@ body.special {
     text-align: center;
 }
 
-.fancy-block-btn {
+.fancy-block-container {
     width: 30px;
-    height: 30px;
     text-align: center;
-    padding: 5px;
-    font-size: 20px;
     position: absolute;
-    top: 50%;
     margin-top: -15px;
     right: -30px;
+}
+
+.fancy-block-btn {
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+    font-size: 20px;
     color: #bdc3c7;
     cursor: pointer;
     opacity: 0;
@@ -438,6 +448,10 @@ body.special {
     text-align: center;
     padding: 15px 0;
     font-size: 50px;
+}
+
+canvas#brain-dump {
+    width: 100%;
 }
 
 .alert {
