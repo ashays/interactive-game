@@ -3,6 +3,20 @@ var setInfo;
 var setRef = firebase.database().ref('sets/' + qid);
 
 $(document).ready(function() {
+	$('.add-question').click(addQuestion);
+	$('#add-image').submit(function(e){
+		e.preventDefault();
+		var questionNum = $(e.target.qNum).val();
+		var imgUrl = $(e.target.url).val();
+		var updates = {};
+		updates['/sets/' + qid + '/questions/' + questionNum + '/image/'] = imgUrl;
+		firebase.database().ref().update(updates).then(function() {
+			console.log('saved');
+			$('.overlay-close').click();
+		}, function(error) {
+			$('#add-image .subt').text(error.message);
+		});
+	});
 });
 
 function onUserDataFunc() {
@@ -58,22 +72,53 @@ function onNotSignedIn() {
 
 function addQuestionBlock(index, question, canEdit) {
 	var qBlockMarkup = "";
-	if (question.type == "flashcard") {
+	var adminControls = '<div class="fancy-block-container"><div class="fancy-block-btn" title="Add Image" onclick="addImage(\'' + index + '\')"><i class="fa fa-image" aria-hidden="true"></i></div><div class="fancy-block-btn" title="Delete Question" onclick="deleteQuestion(\'' + index + '\')"><i class="fa fa-trash" aria-hidden="true"></i></div></div>';
+	var imageEle = '';
+	if (question.image) {
+		imageEle = '<img src="' + question.image + '">';
+	}
+	if (question.type === "simple") {
 		if (canEdit) {
-			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '"><div class="fancy-block-btn" title="Delete Question" onclick="deleteQuestion(\'' + index + '\')"><i class="fa fa-trash" aria-hidden="true"></i></div><input class="answer" data-type="answer" type="text" value="' + question.answer + '"><textarea class="question" data-type="question">' + question.question + '</textarea></div>';
+			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '">' + adminControls + imageEle + '<textarea class="answer" data-type="question">' + question.question + '</textarea><textarea class="question" data-type="answer">' + question.answer + '</textarea></div>';
 		} else {
-			qBlockMarkup = '<div class="question-block" data-num="' + index + '"><input class="answer" data-type="answer" type="text" value="' + question.answer + '" readonly><div class="question" data-type="question">' + question.question + '</div></div>';
+			qBlockMarkup = '<div class="question-block" data-num="' + index + '">' + imageEle + '<div class="answer" data-type="question">' + question.question + '</div><div class="question" data-type="answer">' + question.answer + '</div></div>';
+		}
+	} else if (question.type === "flashcard") {
+		if (canEdit) {
+			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '">' + adminControls + imageEle + '<input class="answer" data-type="answer" type="text" value="' + question.answer + '"><textarea class="question" data-type="question">' + question.question + '</textarea></div>';
+		} else {
+			qBlockMarkup = '<div class="question-block" data-num="' + index + '">' + imageEle + '<input class="answer" data-type="answer" type="text" value="' + question.answer + '" readonly><div class="question" data-type="question">' + question.question + '</div></div>';
+		}
+	} else if (question.type === "open") {
+		if (canEdit) {
+			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '">' + adminControls + imageEle + '<input class="answer" data-type="question" type="text" value="' + question.question + '"></div>';
+		} else {
+			qBlockMarkup = '<div class="question-block" data-num="' + index + '">' + imageEle + '<input class="answer" data-type="question" type="text" value="' + question.question + '" readonly></div>';
 		}
 	}
 	$('#questions-panel').append(qBlockMarkup);
 }
 
-function addQuestion() {
-	var templateQuestion = {
-		type: "flashcard",
-		question: "Definition",
-		answer: "Term"
-	};
+function addQuestion(event) {
+	var type = $(event.target).parents('.add-question').attr('data-type');
+	if (type==="flashcard") {
+		var templateQuestion = {
+			type: "flashcard",
+			question: "Definition",
+			answer: "Term"
+		};
+	} else if (type=="open") {
+		var templateQuestion = {
+			type: "open",
+			question: "Open Ended Question"
+		};
+	} else {
+		var templateQuestion = {
+			type: "simple",
+			question: "Question",
+			answer: "Answer"
+		};
+	}
 	var updates = {};
 	if (setInfo.questions) {
 		updates['/sets/' + qid + '/questions/' + setInfo.questions.length] = templateQuestion;
@@ -82,6 +127,7 @@ function addQuestion() {
 	}
 	firebase.database().ref().update(updates).then(function() {
 		console.log('question added');
+		$("html, body").animate({ scrollTop: $(document).height() }, 500);
 	}, function(error) {
 		displayError(error.message);
 	});
@@ -99,4 +145,11 @@ function deleteQuestion(qNum) {
 			displayError(error.message);
 		});		
 	}
+}
+
+function addImage(qNum) {
+	$('#add-image input[name="url"]').val("");
+	$('#add-image-qNum').val(qNum);
+	$('#image-modal').show();
+	$('.overlay').fadeIn();
 }

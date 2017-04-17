@@ -23,7 +23,9 @@
       <div class="container" id="class-info-panel">
         <h2><!-- Question Set Name --></h2>
         <div class="menu">
-          <div class="menu-btn" id="add-btn" title="Add Question" onclick="addQuestion()"><i class="fa fa-plus" aria-hidden="true"></i><span>Add Question</span></div>
+          <div class="menu-btn add-question" data-type="flashcard" title="Add Flashcard"><i class="fa fa-plus" aria-hidden="true"></i><span>Flashcard</span></div>
+          <div class="menu-btn add-question" data-type="open" title="Add Open-Ended Question"><i class="fa fa-plus" aria-hidden="true"></i><span>Open-Ended</span></div>
+          <div class="menu-btn add-question" data-type="simple" title="Add Question"><i class="fa fa-plus" aria-hidden="true"></i><span>Question</span></div>
         </div>
       </div>
     </header>
@@ -32,6 +34,22 @@
       <div class="panel" id="questions-panel"></div>
       <div class="panel" id="no-set-panel">
         <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><strong>Oops! </strong>We couldn't find the question set you're looking for. Check that you typed the URL in correctly or visit our <a href="help">help center</a>.</div>
+      </div>
+    </div>
+
+    <div class="overlay">
+      <div class="modal" id="image-modal">
+        <div class="overlay-close" title=""><i class="fa fa-times" aria-hidden="true"></i></div>
+        <h2>Add an Image</h2>
+        <div class="modal-contents">
+          <p>Add an image to this question by URL</p>
+          <form id="add-image">
+            <span class="subt" id="add-image-error"></span>
+            <input id="add-image-qNum" type="text" style="display: none;" name="qNum" readonly required>
+            <label><span>Image URL: </span><input type="text" name="url" required></label>
+            <input type="submit" value="Add Image">
+          </form>
+        </div>
       </div>
     </div>
 
