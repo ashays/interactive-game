@@ -48,10 +48,12 @@ $(document).ready(function() {
 	    userRef.on('value', function(snapshot) {
 	      userData = snapshot.val();
 	      userData['uid'] = user.uid;
-	      FS.identify(user.uid, {
-	        displayName: userData.name,
-	        email: userData.email,
-	      });
+	      if (document.location.host) {
+		      FS.identify(user.uid, {
+		        displayName: userData.name,
+		        email: userData.email,
+		      });
+		  }
 	      onUserDataFunc();
 	    });
 	  } else {
