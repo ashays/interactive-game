@@ -42,11 +42,16 @@
         <div class="overlay-close" title=""><i class="fa fa-times" aria-hidden="true"></i></div>
         <h2>Add an Image</h2>
         <div class="modal-contents">
-          <p>Add an image to this question by URL</p>
-          <form id="add-image">
-            <span class="subt" id="add-image-error"></span>
+          <span class="subt" id="add-image-error"></span>
+          <form id="add-image-upload">
+            <p>Upload an image to add</p>
+            <input type="file" name="file" accept="image/*">
+            <input type="submit" value="Upload Image">
+          </form>
+          <form id="add-image-url">
+            <p>Or add an image by URL</p>
             <input id="add-image-qNum" type="text" style="display: none;" name="qNum" readonly required>
-            <label><span>Image URL: </span><input type="text" name="url" required></label>
+            <label><span>Image URL: </span><input type="text" name="url"></label>
             <input type="submit" value="Add Image">
           </form>
         </div>

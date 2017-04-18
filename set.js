@@ -4,8 +4,45 @@ var setRef = firebase.database().ref('sets/' + qid);
 
 $(document).ready(function() {
 	$('.add-question').click(addQuestion);
-	$('#add-image').submit(function(e){
+	$('#add-image-upload').submit(function(e){
 		e.preventDefault();
+		$('#add-image-error').text("");
+		var file = $(e.target.file).prop("files")[0];
+		console.log(file);
+		// TODO make sure image is image and size is not overly large
+		if (file.size > 75000) {
+			$('#add-image-error').text("Please select a smaller image.");
+			return;
+		}
+		var storageRef = firebase.storage().ref();
+		var uploadTask = storageRef.child('sets/' + qid + '/' + file.name).put(file);
+		// Listen for state changes, errors, and completion of the upload.
+		uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+		  function(snapshot) {
+		    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+		    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		    console.log('Upload is ' + progress + '% done');
+		    switch (snapshot.state) {
+		      case firebase.storage.TaskState.PAUSED: // or 'paused'
+		        console.log('Upload is paused');
+		        break;
+		      case firebase.storage.TaskState.RUNNING: // or 'running'
+		        console.log('Upload is running');
+		        break;
+		    }
+		  }, function(error) {
+		  	$('#add-image-error').text(error.message);
+		  	console.error(error);
+		}, function() {
+		  // Upload completed successfully, now we can get the download URL
+		  var downloadURL = uploadTask.snapshot.downloadURL;
+		  $('#add-image-url input[name="url"]').val(downloadURL);
+		  $('#add-image-url').submit();
+		});
+	});
+	$('#add-image-url').submit(function(e){
+		e.preventDefault();
+		$('#add-image-error').text("");
 		var questionNum = $(e.target.qNum).val();
 		var imgUrl = $(e.target.url).val();
 		var updates = {};
@@ -14,7 +51,7 @@ $(document).ready(function() {
 			console.log('saved');
 			$('.overlay-close').click();
 		}, function(error) {
-			$('#add-image .subt').text(error.message);
+			$('#add-image-error').text(error.message);
 		});
 	});
 });
@@ -148,7 +185,7 @@ function deleteQuestion(qNum) {
 }
 
 function addImage(qNum) {
-	$('#add-image input[name="url"]').val("");
+	$('#add-image-url input[name="url"]').val("");
 	$('#add-image-qNum').val(qNum);
 	$('#image-modal').show();
 	$('.overlay').fadeIn();
