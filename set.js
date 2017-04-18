@@ -10,10 +10,10 @@ $(document).ready(function() {
 		var file = $(e.target.file).prop("files")[0];
 		console.log(file);
 		// TODO make sure image is image and size is not overly large
-		if (file.size > 75000) {
-			$('#add-image-error').text("Please select a smaller image.");
-			return;
-		}
+		// if (file.size > 75000) {
+		// 	$('#add-image-error').text("Please select a smaller image.");
+		// 	return;
+		// }
 		var storageRef = firebase.storage().ref();
 		var uploadTask = storageRef.child('sets/' + qid + '/' + file.name).put(file);
 		// Listen for state changes, errors, and completion of the upload.
