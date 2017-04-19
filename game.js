@@ -2,41 +2,10 @@ var gid = getUrlParameter('gid');
 var gameInfo;
 var qSet;
 var classInfo;
-var userIDtoName = {};
-var nameToUserID = {};
-var theTimer;
 
 $(document).ready(function() {
 	$('#settings-use-timer').change(updateTimer);
 	$('#settings-timer').change(updateTimer);
-	$('#submit-answer').submit(function(e){
-		e.preventDefault();
-		var answer = $(e.target.answer).val().toLowerCase();
-		if (gameInfo.round[answer] == gameInfo.round[userData.uid].answer) {
-			console.log("correct");
-			var match = {
-				question: qSet.questions[gameInfo.round[userData.uid].answer].question,
-				answer: qSet.questions[gameInfo.round[userData.uid].answer].answer,
-				people: [answer, userData.name]
-			};
-			var updates = {};
-			updates['/games/' + gid + '/round/' + userData.uid + '/matched/'] = true;
-			updates['/games/' + gid + '/round/' + nameToUserID[answer] + '/matched/'] = true;
-			if (gameInfo.scoreboard) {
-				updates['/games/' + gid + '/scoreboard/' + gameInfo.scoreboard.length] = match;
-			} else {
-				updates['/games/' + gid + '/scoreboard/'] = [match];
-			}
-			firebase.database().ref().update(updates).then(function() {
-				console.log("match made");
-			}, function(error) {
-				displayError(error.message);
-			});
-		} else {
-			$('#submit-answer .error').text("You matched with the wrong person! Try again");
-			console.log("incorrect");
-		}
-	});
 });
 
 function onUserDataFunc() {
@@ -51,14 +20,27 @@ function onUserDataFunc() {
 			$('.subhead .menu-btn').hide();
 			$('#alert-panel').empty();
 			$('.panel').hide();
-			if (gameInfo.owner == userData.uid) {
-				// User is instructor/ admin of game
-				console.log("owner");
-				if (gameInfo.status == "waiting") {
+			if (gameInfo.status == "waiting") {
+				// Show game participants
+				$('#participants-panel ul').empty();
+				if (gameInfo.participants) {
+					$('#participants-panel h3').text('Game Participants');
+					gameInfo.participants.forEach(function(item, index) {
+						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
+							$('#participants-panel ul').append('<li>' + snapshot.val() + '</li>');
+						});
+					});
+				} else {
+					$('#participants-panel h3').text('No Game Participants');
+				}
+				$('#participants-panel').show();
+				if (gameInfo.owner == userData.uid) {
+					// User is instructor/ admin of game
 					$('#start-btn').show();
 					addAlert("A new game has been created! Adjust the game settings below and instruct your students to join the game on their devices.", "help");
 					// Settings panel
 					$('#settings-panel').show();
+					// List of question sets to choose from
 					$('#question-sets').empty();
 					userData.mySets.forEach(function(item, index) {
 						firebase.database().ref('sets/' + item + '/name').once('value', function(snapshot) {
@@ -69,63 +51,30 @@ function onUserDataFunc() {
 							}
 						});
 					});
-				} else if (gameInfo.status == "started") {
-					$('#restart-btn').show();
-					showScoreboard();
-					if (gameInfo.settings && gameInfo.settings.timer) {
-						$('#timer-panel').show();
-						if (! theTimer) {
-							console.log("start timer");
-							startTimer(Number(gameInfo.settings.timer) * 60);
-						}						
+					// Select appropriate game type
+					$('#game-type li').removeClass("selected");
+					$('#game-type [data-name="' + gameInfo.type + '"]').addClass("selected");
+				} else {
+					// User is student in class and has permission to participant in game
+					if ($.inArray(userData.uid, gameInfo.participants) == -1) {
+						// User has not joined game
+						$('#join-btn').show();
+						addAlert("Your instructor has created a game. Tap 'Join Game' above to participate.", "help");
+					} else {
+						// User has joined game
+						addAlert("Waiting for more students to join. The game will begin on your instructor's mark.", "help");
 					}
 				}
 			} else {
-				// User is student in class and has permission to participant in game
-				console.log("student");
-				if ($.inArray(userData.uid, gameInfo.participants) == -1) {
+				// Game has begun
+				if (gameInfo.owner == userData.uid || $.inArray(userData.uid, gameInfo.participants) != -1) {
+					if (gameInfo.type == "MatchMe") {
+						window.location.replace("game/matchme.html?gid=" + gid);
+					}
+				} else {
 					// User has not joined game
 					$('#join-btn').show();
-					addAlert("Your instructor has created a game. Tap 'Join Game' above to participate.", "help");
-				} else {
-					// User has joined game
-					if (gameInfo.status == "waiting") {
-						addAlert("Waiting for more students to join. The game will begin on your instructor's mark.", "help");
-					} else if (gameInfo.status == "started") {
-						if (gameInfo.round[userData.uid].matched) {
-							showScoreboard();
-						} else {
-							// Show prompt
-							$('#prompt-panel .prompt').text(gameInfo.round[userData.uid].prompt);
-							$('#prompt-panel').show();							
-						}
-					}
-				}
-			}
-			if (gameInfo.status == "waiting") {
-				// Show game participants
-				$('#participants-panel ul').empty();
-				if (gameInfo.participants) {
-					$('#participants-panel h3').text('Game Participants');
-					gameInfo.participants.forEach(function(item, index) {
-						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
-							userIDtoName[item] = snapshot.val();
-							$('#participants-panel ul').append('<li>' + snapshot.val() + '</li>');
-						});
-					});
-				} else {
-					$('#participants-panel h3').text('No Game Participants');
-				}
-				$('#participants-panel').show();
-			} else if (gameInfo.status == "started") {
-				$('#instructions-panel').show();
-				if (gameInfo.participants) {
-					gameInfo.participants.forEach(function(item, index) {
-						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
-							userIDtoName[item] = snapshot.val();
-							nameToUserID[snapshot.val().toLowerCase()] = item;
-						});
-					});
+					addAlert("Your instructor has created a game, and the game has already begun. Tap 'Join Game' above to participate.", "help");
 				}
 			}
 			// Get class info
@@ -142,18 +91,6 @@ function onUserDataFunc() {
 	});
 }
 
-function showScoreboard() {
-	// Show scoreboard
-	$('#scoreboard-panel').empty();
-	if (gameInfo.scoreboard) {
-		for (ind in gameInfo.scoreboard) {
-			rankBlock = '<div class="question-block"><div class="answer">' + gameInfo.scoreboard[ind].answer + '</div><div class="question">' + gameInfo.scoreboard[ind].question + '</div><div class="people"><span>' + (Number(ind) + 1) + ' </span>' + gameInfo.scoreboard[ind].people[0] + ' & ' + gameInfo.scoreboard[ind].people[1] + '</div></div>';
-			$('#scoreboard-panel').append(rankBlock);
-		}
-	}
-	$('#scoreboard-panel').show();
-}
-
 function addAlert(message, type) {
 	if (type == "help") {
 		$('#alert-panel').append('<div class="alert"><i class="fa fa-question-circle" aria-hidden="true"></i>' + message + '</div>');
@@ -165,37 +102,6 @@ function addAlert(message, type) {
 		// }, 5000);
 	}
 	$('#alert-panel').show();
-}
-
-function startTimer(duration) {
-	// TODO pause game when timer ends
-    var start = Date.now(),
-        diff,
-        minutes,
-        seconds;
-    function timer() {
-        // get the number of seconds that have elapsed since 
-        // startTimer() was called
-        diff = duration - (((Date.now() - start) / 1000) | 0);
-
-        // does the same job as parseInt truncates the float
-        minutes = (diff / 60) | 0;
-        seconds = (diff % 60) | 0;
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        $('#timer-panel').text(minutes + ":" + seconds);
-
-        if (diff <= 0) {
-            // add one second so that the count down starts at the full duration
-            // example 05:00 not 04:59
-            start = Date.now() + 1000;
-        }
-    };
-    // we don't want to wait a full second before the timer starts
-    timer();
-    theTimer = setInterval(timer, 1000);
 }
 
 function updateSet(qid) {
@@ -253,38 +159,45 @@ function displayError(message) {
 }
 
 function startGame() {
-	// Must be at least 2 participants
-	if (!gameInfo.participants || gameInfo.participants.length < 2) {
-		displayError("There must be at least two participants to begin this game.");
+	var updates = {};
+	if (gameInfo.type == "MatchMe") {
+		// Must be at least 2 participants
+		if (!gameInfo.participants || gameInfo.participants.length < 2) {
+			displayError("There must be at least two participants to begin this game.");
+			return;
+		}
+		// // Pair all participants and assign everyone a question or answer
+		// var questions = qSet.questions;
+		// for (qNum in questions) {
+		// 	questions[qNum].number = qNum;
+		// }
+		// shuffle(questions);
+		// // TODO filter so only flashcard questions
+		// var participants = gameInfo.participants;
+		// shuffle(participants);
+		// var round = {};
+		// // TODO make work for odd numbers of participants
+		// // TODO make work when # questions < # participants
+		// // TODO make work if participants have same name
+		// for (i = 0; i < participants.length - 1; i+=2) {
+		// 	var question = questions.pop();
+		// 	round[participants[i]] = {prompt: question.question, answer: question.number};
+		// 	round[userIDtoName[participants[i]].toLowerCase()] = question.number;
+		// 	round[participants[i+1]] = {prompt: question.answer, answer: question.number};
+		// 	round[userIDtoName[participants[i+1]].toLowerCase()] = question.number;
+		// }
+		// updates['/games/' + gid + '/scoreboard'] = [];
+		// updates['/games/' + gid + '/round'] = round;
+	} else if (gameInfo.type == "Brain Dump") {
+		// updates['/games/' + gid + '/current'] = 0;
+		// updates['/games/' + gid + '/submissions'] = [];
+	} else {
+		// Invalid game type
+		displayError("Please select a valid game!");
 		return;
 	}
-	// TODO fix timer glitchiness
-	clearInterval(theTimer);
-	theTimer = undefined;
-	// Pair all participants and assign everyone a question or answer
-	var questions = qSet.questions;
-	for (qNum in questions) {
-		questions[qNum].number = qNum;
-	}
-	shuffle(questions);
-	// TODO filter so only flashcard questions
-	var participants = gameInfo.participants;
-	shuffle(participants);
-	var round = {};
-	// TODO make work for odd numbers of participants
-	// TODO make work when # questions < # participants
-	// TODO make work if participants have same name
-	for (i = 0; i < participants.length - 1; i+=2) {
-		var question = questions.pop();
-		round[participants[i]] = {prompt: question.question, answer: question.number};
-		round[userIDtoName[participants[i]].toLowerCase()] = question.number;
-		round[participants[i+1]] = {prompt: question.answer, answer: question.number};
-		round[userIDtoName[participants[i+1]].toLowerCase()] = question.number;
-	}
-	var updates = {};
-	updates['/games/' + gid + '/scoreboard'] = [];
-	updates['/games/' + gid + '/round'] = round;
-	updates['/games/' + gid + '/status'] = "started";
+	updates['/games/' + gid + '/name'] = classInfo.name + ": " + qSet.name;
+	updates['/games/' + gid + '/status'] = "setup";
 	firebase.database().ref().update(updates).then(function() {
 		console.log("game has started");
 	}, function(error) {
@@ -295,17 +208,3 @@ function startGame() {
 // function onNotSignedIn() {
 // 	window.location.replace("login.html?cid=" + cid);
 // }
-
-/**
- * Shuffles array in place.
- * @param {Array} a items The array containing the items.
- */
-function shuffle(a) {
-    var j, x, i;
-    for (i = a.length; i; i--) {
-        j = Math.floor(Math.random() * i);
-        x = a[i - 1];
-        a[i - 1] = a[j];
-        a[j] = x;
-    }
-}

@@ -21,10 +21,9 @@
 
     <header class="subhead">
       <div class="container" id="game-info-panel">
-        <h2>Class Name | Set Name | Game Type</h2>
+        <h2><!-- Class Name | Set Name | Game Type --></h2>
         <div class="menu">
           <div class="menu-btn" id="start-btn" title="Start Game" onclick="startGame()"><i class="fa fa-play" aria-hidden="true"></i><span>Start Game</span></div>
-          <div class="menu-btn" id="restart-btn" title="Play Again" onclick="startGame()"><i class="fa fa-repeat" aria-hidden="true"></i><span>Play Again</span></div>
           <div class="menu-btn" id="join-btn" title="Join Game" onclick="joinGame()"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Join Game</span></div>
         </div>
       </div>
@@ -46,14 +45,14 @@
           <div class="block-area">
             <div class="area-head">Game Type *</div>
             <ul class="options" id="game-type">
-              <li class="selected">MatchMe <span class="detail">Participants are assigned a term or definition and are instructed to find their match.</span></li>
-              <li>Brain Dump<span class="detail">Open-ended questions and participant responses appear on the screen.</span></li>
-              <li>Circle<span class="detail">Participants each have a question and answer and must arrange themselves in a circle.</span></li>
-              <li>Clicker<span class="detail"></span><span class="tag">Not Compatible <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></li>
+              <li data-name="MatchMe">MatchMe <span class="detail">Participants are assigned a term or definition and are instructed to find their match.</span></li>
+              <li data-name="Brain Dump">Brain Dump<span class="detail">Open-ended questions and participant responses appear on the screen.</span></li>
+              <li data-name="Circle">Circle<span class="detail">Participants each have a question and answer and must arrange themselves in a circle.</span></li>
+              <!-- <li>Clicker<span class="detail"></span><span class="tag">Not Compatible <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></li>
               <li>Jeopardy<span class="detail"></span></li>
               <li>Trivia<span class="detail"></span></li>
               <li>Grab Bag<span class="detail"></span></li>
-              <li>Popcorn<span class="detail"></span><span class="tag">Not Compatible <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></li>
+              <li>Popcorn<span class="detail"></span><span class="tag">Not Compatible <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></li> -->
             </ul>
           </div>
           <div class="block-area">
@@ -63,21 +62,6 @@
           </div>
         </div>
         <ul></ul>
-      </div>
-      <div class="panel" id="timer-panel">5:00</div>
-      <div class="panel" id="scoreboard-panel"></div>
-      <div class="panel" id="prompt-panel">
-        <div class="block">
-          <div class="prompt"></div>
-          <form id="submit-answer">
-            <span class="subt error"></span>
-            <input type="text" name="answer" placeholder="Match's Name" required>
-            <input type="submit" value="Submit">
-          </form>
-        </div>
-      </div>
-      <div class="panel" id="instructions-panel">
-        <p class="instructions">Everyone playing has a word or corresponding definition on his or her screen. When the game begins, find your match (whoever has the corresponding definition to your term or term to your definition). Once you find your match, enter his or her name in your device. Matches will appear on the front screen as they are made.</p>
       </div>
       <div class="panel" id="error-panel">
         <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><strong>Oops! </strong>There was an error. Either this game doesn't exist or you do not have permission to participate. Please consult your teacher or visit our <a href="help">help center</a>.</div>
