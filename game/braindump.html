@@ -23,35 +23,42 @@
       <div class="container" id="game-info-panel">
         <h2><!-- Class Name | Set Name | Game Type --></h2>
         <div class="menu">
-          <div class="menu-btn" id="restart-btn" title="Play Again" onclick="restartGame()"><i class="fa fa-repeat" aria-hidden="true"></i><span>Play Again</span></div>
+          <div class="menu-btn" id="prev-question-btn" title="Previos Question" onclick="prevQuestion()"><i class="fa fa-arrow-left" aria-hidden="true"></i><span>Previos Question</span></div>
+          <div class="menu-btn" id="next-question-btn" title="Next Question" onclick="nextQuestion()"><i class="fa fa-arrow-right" aria-hidden="true"></i><span>Next Question</span></div>
         </div>
       </div>
     </header>
 
     <div class="container">
       <div class="panel" id="alert-panel"></div>
-      <div class="panel" id="timer-panel">5:00</div>
-      <div class="panel" id="scoreboard-panel"></div>
       <div class="panel" id="prompt-panel">
         <div class="block">
           <div class="prompt"></div>
           <form id="submit-answer">
-            <span class="subt error"></span>
-            <input type="text" name="answer" placeholder="Match's Name" required>
+            <input type="text" name="answer" placeholder="Answer" required>
             <input type="submit" value="Submit">
           </form>
-          <div class="people" id="team-members"></div>
         </div>
       </div>
       <div class="panel" id="instructions-panel">
-        <p class="instructions" data-name="MatchMe">Everyone playing has a word or corresponding definition on his or her screen. When the game begins, find your match (whoever has the corresponding definition to your term or term to your definition). Once you find your match, enter his or her name in your device. Matches will appear on the front screen as they are made.</p>
+        <p class="instructions" data-name="Brain Dump">Make as many submissions as you can relating to the prompt on your screen. Submissions appear word cloud style on the main screen.</p>
+      </div>
+      <div class="panel" id="brain-dump-panel">
+        <!-- <span id="brain-dump-question"></span>
+        <canvas id="brain-dump" width="880" height="440"></canvas> -->
+        <h2>Question 1</h2>
+        <ul><li>Answer 1</li><li>Some other answer</li></ul>
+      </div>      
+      <div class="panel" id="error-panel">
+        <div class="empty-message"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><strong>Oops! </strong>There was an error. Either this game doesn't exist or you do not have permission to participate. Please consult your teacher or visit our <a href="help">help center</a>.</div>
       </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
     <script src="../jquery-3.1.1.min.js"></script>
     <script src="../header.js"></script>
+    <script src="wordcloud2.js"></script>
     <script src="games.js"></script>
-    <script src="matchme.js"></script>
+    <script src="braindump.js"></script>
   </body>
 </html>

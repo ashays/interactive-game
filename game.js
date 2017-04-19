@@ -7,6 +7,21 @@ $(document).ready(function() {
 	$('#settings-use-timer').change(updateTimer);
 	$('#settings-timer').change(updateTimer);
 	$('#settings-collaborative').change(collaborativeMode);
+	$('#game-type li').click(function(e) {
+		var newType = "";
+		if ($(e.target).attr("data-name")) {
+			newType = $(e.target).attr("data-name");
+		} else {
+			newType = $(e.target).parents('li').attr("data-name");
+		}
+		var updates = {};
+		updates['/games/' + gid + '/type'] = newType;
+		firebase.database().ref().update(updates).then(function() {
+			console.log("set updated");
+		}, function(error) {
+			displayError(error.message);
+		});
+	});
 });
 
 function onUserDataFunc() {
@@ -71,6 +86,8 @@ function onUserDataFunc() {
 				if (gameInfo.owner == userData.uid || $.inArray(userData.uid, gameInfo.participants) != -1) {
 					if (gameInfo.type == "MatchMe") {
 						window.location.replace("game/matchme.html?gid=" + gid);
+					} else if (gameInfo.type == "Brain Dump") {
+						window.location.replace("game/braindump.html?gid=" + gid);
 					}
 				} else {
 					// User has not joined game
