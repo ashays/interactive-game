@@ -87,7 +87,14 @@ function startGameStudent() {
 		$('#prompt-panel').show();
 		$('#prompt-panel .prompt').text(qSet.questions[userRoundInfo.qNum].question);
 	} else {
-		addAlert("Looks like you're sitting out this round. Pair up with a peer or just sit tight!", "help");
+		// addAlert("Looks like you're sitting out this round. Pair up with a peer or just sit tight!", "help");
+		var updates = {};
+		updates['/games/' + gid + '/round/' + userData.uid] = {qNum: 0};
+		firebase.database().ref().update(updates).then(function() {
+			console.log("next question");
+		}, function(error) {
+			displayError(error.message);
+		});
 	}
 }
 
