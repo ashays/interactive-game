@@ -128,16 +128,19 @@ function addQuestionBlock(index, question, canEdit) {
 		}
 	} else if (question.type === "open") {
 		if (canEdit) {
-			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '">' + adminControls + imageEle + '<input class="answer" data-type="question" type="text" value="' + question.question + '"></div>';
+			qBlockMarkup = '<div class="question-block admin" data-num="' + index + '">' + adminControls + imageEle + '<textarea class="answer" data-type="question">' + question.question + '</textarea></div>';
 		} else {
-			qBlockMarkup = '<div class="question-block" data-num="' + index + '">' + imageEle + '<input class="answer" data-type="question" type="text" value="' + question.question + '" readonly></div>';
+			qBlockMarkup = '<div class="question-block" data-num="' + index + '">' + imageEle + '<div class="answer" data-type="question">' + question.question + '</div></div>';
 		}
 	}
 	$('#questions-panel').append(qBlockMarkup);
 }
 
 function addQuestion(event) {
-	var type = $(event.target).parents('.add-question').attr('data-type');
+	var type = $(event.target).attr('data-type');
+	if (! type) {
+		type = $(event.target).parents('.add-question').attr('data-type');
+	}
 	if (type==="flashcard") {
 		var templateQuestion = {
 			type: "flashcard",
