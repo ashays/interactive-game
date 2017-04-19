@@ -52,6 +52,16 @@ function onUserDataFunc() {
 						});
 					});
 				}
+				// Show list of members in class
+				$('#members-panel ul').empty();
+				if (classInfo.members) {
+					$('#members-panel').show();
+					classInfo.members.forEach(function(item, index) {
+						firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
+							$('#members-panel ul').append('<li>' + snapshot.val() + '</li>');
+						});
+					});
+				}
 				if (classInfo.owner == userData.uid) {
 					// User is instructor
 					$('#invite-btn').show();
@@ -124,7 +134,11 @@ function approveJoin(user, name) {
 		classReq.splice($.inArray(user, classReq), 1);
 		var updates = {};
 		updates['/classes/' + cid + '/requests'] = classReq;
-		// TODO User can't join multiple classes currently
+		if (classInfo.members) {
+			updates['/classes/' + cid + '/members/' + classInfo.members.length] = user;
+		} else {
+			updates['/classes/' + cid + '/members/'] = [user];
+		}
 		var listOfClasses;
 		firebase.database().ref('users/' + user + '/classesIn').once('value', function(snapshot){
 			listOfClasses = snapshot.val();
@@ -162,6 +176,7 @@ function inviteStudentsPrompt() {
 }
 
 function leaveClass() {
+	// TODO remove from class members list
 	console.log("leaving class")
 	if (userData.classesIn) {
 		classesIn = userData.classesIn;
