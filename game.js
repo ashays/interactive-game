@@ -6,6 +6,7 @@ var classInfo;
 $(document).ready(function() {
 	$('#settings-use-timer').change(updateTimer);
 	$('#settings-timer').change(updateTimer);
+	$('#settings-collaborative').change(collaborativeMode);
 });
 
 function onUserDataFunc() {
@@ -114,6 +115,20 @@ function updateSet(qid) {
 	});
 }
 
+function collaborativeMode() {
+	var updates = {};
+	if ($('#settings-collaborative').is(':checked')) {
+		updates['/games/' + gid + '/settings/collaborative'] = 4;
+	} else {
+		updates['/games/' + gid + '/settings/collaborative'] = null;
+	}
+	firebase.database().ref().update(updates).then(function() {
+		console.log("collaborative mode updated");
+	}, function(error) {
+		displayError(error.message);
+	});	
+}
+
 function updateTimer() {
 	var updates = {};
 	if ($('#settings-use-timer').is(':checked')) {
@@ -160,34 +175,16 @@ function displayError(message) {
 
 function startGame() {
 	var updates = {};
+	if (gameInfo.settings && gameInfo.settings.collaborative && (!gameInfo.participants || gameInfo.participants.length < gameInfo.settings.collaborative)) {
+		displayError("There must be at least " + gameInfo.settings.collaborative + " participants to use collaborative mode.");
+		return;		
+	}
 	if (gameInfo.type == "MatchMe") {
 		// Must be at least 2 participants
 		if (!gameInfo.participants || gameInfo.participants.length < 2) {
 			displayError("There must be at least two participants to begin this game.");
 			return;
 		}
-		// // Pair all participants and assign everyone a question or answer
-		// var questions = qSet.questions;
-		// for (qNum in questions) {
-		// 	questions[qNum].number = qNum;
-		// }
-		// shuffle(questions);
-		// // TODO filter so only flashcard questions
-		// var participants = gameInfo.participants;
-		// shuffle(participants);
-		// var round = {};
-		// // TODO make work for odd numbers of participants
-		// // TODO make work when # questions < # participants
-		// // TODO make work if participants have same name
-		// for (i = 0; i < participants.length - 1; i+=2) {
-		// 	var question = questions.pop();
-		// 	round[participants[i]] = {prompt: question.question, answer: question.number};
-		// 	round[userIDtoName[participants[i]].toLowerCase()] = question.number;
-		// 	round[participants[i+1]] = {prompt: question.answer, answer: question.number};
-		// 	round[userIDtoName[participants[i+1]].toLowerCase()] = question.number;
-		// }
-		// updates['/games/' + gid + '/scoreboard'] = [];
-		// updates['/games/' + gid + '/round'] = round;
 	} else if (gameInfo.type == "Brain Dump") {
 		// updates['/games/' + gid + '/current'] = 0;
 		// updates['/games/' + gid + '/submissions'] = [];

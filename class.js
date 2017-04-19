@@ -99,10 +99,14 @@ function createGame() {
 		status: "waiting"
 	};
 	var newGameKey = firebase.database().ref().child('games').push().key;
-	if (classInfo.currentGame) {
-		// TODO If there is a game in progress, end the game and start the new game
-	}
 	var updates = {};
+	if (classInfo.currentGame) {
+		if (classInfo.games) {
+			updates['/classes/' + cid + '/games/' + classInfo.games.length] = classInfo.currentGame;
+		} else {
+			updates['/classes/' + cid + '/games'] = [classInfo.currentGame];
+		}
+	}
 	updates['/classes/' + cid + '/currentGame'] = newGameKey;
 	updates['/games/' + newGameKey] = newGame;
 	firebase.database().ref().update(updates).then(function() {

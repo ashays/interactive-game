@@ -1,3 +1,4 @@
+var team;
 var correctMatch;
 var theTimer;
 var userRoundInfo;
@@ -6,15 +7,17 @@ $(document).ready(function() {
 	$('#submit-answer').submit(function(e){
 		e.preventDefault();
 		var answer = $(e.target.answer).val().toLowerCase();
-		if (answer == correctMatch.toLowerCase()) {
+		if ($.inArray(answer, correctMatch) != -1) {
 			console.log("correct");
 			var match = {
 				question: gameInfo.round[userData.uid].qNum,
-				people: [answer, userData.name]
+				people: team.concat(correctMatch)
 			};
 			var updates = {};
-			updates['/games/' + gid + '/round/' + userData.uid + '/matched/'] = true;
-			updates['/games/' + gid + '/round/' + gameInfo.round[userData.uid].match + '/matched/'] = true;
+			var allMatchedPeople = userRoundInfo.team.concat(userRoundInfo.match);
+			for (i = 0; i < allMatchedPeople.length; i++) {
+				updates['/games/' + gid + '/round/' + allMatchedPeople[i] + '/matched/'] = true;				
+			}
 			if (gameInfo.scoreboard) {
 				updates['/games/' + gid + '/scoreboard/' + gameInfo.scoreboard.length] = match;
 			} else {
@@ -49,17 +52,29 @@ function startGameStudent() {
 	userRoundInfo = gameInfo.round[userData.uid];
 	$('#instructions-panel').show();
 	if (userRoundInfo) {
-		firebase.database().ref('users/' + userRoundInfo.match + '/name/').once('value', function(snapshot) {
-			correctMatch = snapshot.val();
+		correctMatch = [];
+		userRoundInfo.match.forEach(function(item, index) {
+			firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
+				correctMatch.push(snapshot.val().toLowerCase());
+			});
+		});
+		team = [];
+		$('#team-members').hide();
+		userRoundInfo.team.forEach(function(item, index) {
+			firebase.database().ref('users/' + item + '/name').once('value', function(snapshot) {
+				team.push(snapshot.val().toLowerCase());
+				if (gameInfo.settings && gameInfo.settings.collaborative) {
+					updateAndShowTeam();
+				}
+			});
 		});
 		if (userRoundInfo.matched) {
 			showScoreboard();
 		} else {
 			// Show prompt
+			$('#prompt-panel img').remove();
 			if (qSet.questions[userRoundInfo.qNum].image && userRoundInfo.type == "question") {
 				$('#prompt-panel .prompt').before('<img src="' + qSet.questions[userRoundInfo.qNum].image + '">');
-			} else {
-				$('#prompt-panel img').remove();
 			}
 			$('#prompt-panel .prompt').text(qSet.questions[userRoundInfo.qNum][userRoundInfo.type]);
 			$('#prompt-panel').show();
@@ -70,19 +85,30 @@ function startGameStudent() {
 	}
 }
 
+function updateAndShowTeam() {
+	if (team.length == userRoundInfo.team.length && team.length > 1) {
+		$('#team-members').show();
+		$('#team-members').text("Your group: " + team.join(", "));
+	}
+}
+
 function showScoreboard() {
 	// Show scoreboard
 	$('#scoreboard-panel').empty();
 	if (gameInfo.scoreboard) {
 		for (ind in gameInfo.scoreboard) {
+			var allPeople = gameInfo.scoreboard[ind].people[0];
+			for (i = 1; i < gameInfo.scoreboard[ind].people.length; i++) {
+				allPeople +=  ' & ' + gameInfo.scoreboard[ind].people[i];
+			}
 			var imageCon = '';
 			if (qSet.questions[Number(gameInfo.scoreboard[ind].question)].image) {
 				imageCon = '<img src="' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].image + '">';
 			}
 			if (qSet.questions[Number(gameInfo.scoreboard[ind].question)].type == "flashcard") {
-				rankBlock = '<div class="question-block">' + imageCon + '<div class="answer">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].answer + '</div><div class="question">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].question + '</div><div class="people"><span>' + (Number(ind) + 1) + ' </span>' + gameInfo.scoreboard[ind].people[0] + ' & ' + gameInfo.scoreboard[ind].people[1] + '</div></div>';				
+				rankBlock = '<div class="question-block">' + imageCon + '<div class="answer">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].answer + '</div><div class="question">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].question + '</div><div class="people"><span>' + (Number(ind) + 1) + ' </span>' + allPeople + '</div></div>';				
 			} else if (qSet.questions[Number(gameInfo.scoreboard[ind].question)].type == "simple") {
-				rankBlock = '<div class="question-block">' + imageCon + '<div class="answer">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].question + '</div><div class="question">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].answer + '</div><div class="people"><span>' + (Number(ind) + 1) + ' </span>' + gameInfo.scoreboard[ind].people[0] + ' & ' + gameInfo.scoreboard[ind].people[1] + '</div></div>';
+				rankBlock = '<div class="question-block">' + imageCon + '<div class="answer">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].question + '</div><div class="question">' + qSet.questions[Number(gameInfo.scoreboard[ind].question)].answer + '</div><div class="people"><span>' + (Number(ind) + 1) + ' </span>' + allPeople + '</div></div>';
 			}
 			$('#scoreboard-panel').append(rankBlock);
 		}
@@ -143,10 +169,31 @@ function setUpGame() {
 	shuffle(participants);
 	// Pair each participant with someone else
 	var round = {};
-	for (i = 0; i < participants.length - 1; i+=2) {
-		var question = questions.pop();
-		round[participants[i]] = {type: "question", qNum: question.number, match: participants[i+1]};
-		round[participants[i+1]] = {type: "answer", qNum: question.number, match: participants[i]};
+	if (gameInfo.settings && gameInfo.settings.collaborative) {
+		var numTeams = gameInfo.settings.collaborative;
+		var groups = [];
+		for (i = 0; i < numTeams; i++) {
+			groups[i] = [];
+		}
+		for (j = 0; j < participants.length; j++) {
+			groups[j % numTeams].push(participants[j]);
+		}
+		for (k = 0; k < participants.length; k++) {
+			var yourGroup = k % numTeams;
+			var theType = "question";
+			var yourMatch = yourGroup + 1;
+			if (yourGroup % 2 == 1) {
+				theType = "answer";
+				yourMatch = yourGroup - 1;
+			}
+			round[participants[k]] = {type: theType, qNum: Math.floor(yourGroup/2), team: groups[yourGroup], match: groups[yourMatch]};
+		}
+	} else {
+		for (i = 0; i < participants.length - 1; i+=2) {
+			var question = questions.pop();
+			round[participants[i]] = {type: "question", team: [participants[i]], qNum: question.number, match: [participants[i+1]]};
+			round[participants[i+1]] = {type: "answer", team: [participants[i+1]], qNum: question.number, match: [participants[i]]};
+		}		
 	}
 	// Start game
 	updates['/games/' + gid + '/scoreboard'] = [];
