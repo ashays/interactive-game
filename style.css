@@ -151,6 +151,11 @@ h3 i {
     border-radius: 5px;
 }
 
+.panel ul li .tag.special {
+    background: #34495e;
+    opacity: .75;
+}
+
 .panel ul li .tag i {
     float: none;
     margin: 0 5px;
@@ -390,6 +395,10 @@ body.special {
 
 .fancy-block-btn:hover {
     color: #95a5a6;
+}
+
+.fancy-block-btn[title="Reorder"] {
+    cursor: move;
 }
 
 .block .block-area {

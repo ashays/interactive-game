@@ -34,23 +34,25 @@ function onUserDataFunc() {
 				// Show list of games
 				$('#games-panel ul').empty();
 				$('#games-panel').show();
-				if (classInfo.currentGame) {
+				if (classInfo.currentGame || classInfo.games) {
 					$('#games-panel h2').text("Games");
-					firebase.database().ref('games/' + classInfo.currentGame + '/type').once('value', function(snapshot) {
-						$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
-					});
+					if (classInfo.currentGame) {
+						firebase.database().ref('games/' + classInfo.currentGame + '/type').once('value', function(snapshot) {
+							$('#games-panel ul').append('<li><a href="game.html?gid=' + classInfo.currentGame + '">' + snapshot.val() + '<span class="tag">In Progress <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></span></a></li>');
+						});						
+					}
+					if (classInfo.games) {
+						classInfo.games.forEach(function(item, index) {
+							firebase.database().ref('games/' + item).once('value', function(snapshot) {
+								$('#games-panel ul').append('<li><a href="game.html?gid=' + item + '">' + snapshot.val().name + '<span class="tag special">' + snapshot.val().date.substring(0, 10) + '<i class="fa fa-calendar" aria-hidden="true"></i></span></a></li>');
+							});
+						});
+					}
 				} else {
 					$('#games-panel h2').text("No Games");
 					if (classInfo.owner == userData.uid) {
 						addAlert("Get started by inviting your students to join this class. Then, create and play a game to engage your students with the course material.", "help");
 					}
-				}
-				if (classInfo.games) {
-					classInfo.games.forEach(function(item, index) {
-						firebase.database().ref('games/' + item + '/type').once('value', function(snapshot) {
-							$('#games-panel ul').append('<li><a href="game.html?gid=' + item + '">' + snapshot.val() + '</a></li>');
-						});
-					});
 				}
 				// Show list of members in class
 				$('#members-panel ul').empty();
@@ -66,6 +68,7 @@ function onUserDataFunc() {
 					// User is instructor
 					$('#invite-btn').show();
 					$('#new-game-btn').show();
+					$('#analytics-btn').show();
 					// Class join requests
 					$('#requests-panel ul').empty();
 					if (classInfo.requests) {

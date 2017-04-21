@@ -109,7 +109,7 @@ function onNotSignedIn() {
 
 function addQuestionBlock(index, question, canEdit) {
 	var qBlockMarkup = "";
-	var adminControls = '<div class="fancy-block-container"><div class="fancy-block-btn" title="Add Image" onclick="addImage(\'' + index + '\')"><i class="fa fa-image" aria-hidden="true"></i></div><div class="fancy-block-btn" title="Delete Question" onclick="deleteQuestion(\'' + index + '\')"><i class="fa fa-trash" aria-hidden="true"></i></div></div>';
+	var adminControls = '<div class="fancy-block-container"><div class="fancy-block-btn" title="Reorder"><i class="fa fa-bars" aria-hidden="true"></i></div><div class="fancy-block-btn" title="Add Image" onclick="addImage(\'' + index + '\')"><i class="fa fa-image" aria-hidden="true"></i></div><div class="fancy-block-btn" title="Delete Question" onclick="deleteQuestion(\'' + index + '\')"><i class="fa fa-trash" aria-hidden="true"></i></div></div>';
 	var imageEle = '';
 	if (question.image) {
 		imageEle = '<img src="' + question.image + '">';
